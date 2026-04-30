@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhotoSewa | Join the Network</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #050505; color: white; overflow: hidden; }
+        h1, h2, .brand-font { font-family: 'Montserrat', sans-serif; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .form-input {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            border-color: #4F46E5;
+            outline: none;
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .back-nav-white {
+            transition: all 0.3s ease;
+            color: white;
+        }
+        .back-nav-white:hover {
+            opacity: 0.7;
+            transform: translateX(-4px);
+        }
+
+        /* Role Selection Styling */
+        .role-pill {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        input:checked + .role-pill {
+            background: #4F46E5;
+            border-color: #4F46E5;
+            color: white;
+        }
+    </style>
+</head>
+<body class="h-screen flex items-center justify-center p-4">
+
+    <div class="fixed inset-0 z-0">
+        <div class="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-indigo-900/10 blur-[100px] rounded-full"></div>
+    </div>
+
+    <a href="{%url 'home_page'%}" class="fixed top-8 left-8 z-50 flex items-center space-x-3 back-nav-white group">
+        <i class="fa fa-arrow-left text-xl"></i>
+        <span class="text-[10px] font-800 uppercase tracking-[0.3em]">Back</span>
+    </a>
+
+    <main class="relative z-10 w-full max-w-4xl grid lg:grid-cols-2 gap-0 overflow-hidden rounded-[2rem] glass-panel shadow-2xl">
+        
+        <div class="hidden lg:flex p-12 flex-col justify-between bg-black/40 border-r border-white/5">
+            <div>
+                <span class="text-xl font-800 tracking-tighter text-indigo-500 brand-font italic uppercase">Photo<span class="text-white">Sewa</span></span>
+                <h1 class="mt-12 text-5xl font-800 leading-none uppercase tracking-tighter">
+                    Join the <br><span class="text-indigo-500">Circle.</span>
+                </h1>
+                <p class="mt-6 text-gray-400 text-sm font-light leading-relaxed max-w-xs">
+                    Nepal's elite visual storytelling community awaits your perspective.
+                </p>
+            </div>
+
+            <div class="text-[9px] font-800 uppercase tracking-[0.4em] text-gray-700">
+                PHOTOSEWA...........................................
+            </div>
+        </div>
+
+        <div class="p-10 md:p-14 bg-white/5 flex items-center">
+            <div class="max-w-xs mx-auto lg:max-w-none w-full">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-800 uppercase tracking-tight">Register</h2>
+                    <p class="text-gray-500 text-[11px] font-medium tracking-wide mt-2">Start your journey today.</p>
+                </div>
+
+                <form action="#" class="space-y-5">
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="role" value="photographer" class="hidden">
+                            <div class="role-pill py-2.5 border border-white/10 rounded-xl text-center text-[9px] font-800 uppercase tracking-widest text-gray-500">
+                                Photographer
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="role" value="client" class="hidden">
+                            <div class="role-pill py-2.5 border border-white/10 rounded-xl text-center text-[9px] font-800 uppercase tracking-widest text-gray-500">
+                                Client
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-[9px] font-800 uppercase tracking-widest text-indigo-500 mb-2 ml-1">Full Name</label>
+                            <input type="text" placeholder="John Doe" class="w-full px-5 py-3.5 rounded-2xl form-input text-sm text-white">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-800 uppercase tracking-widest text-indigo-500 mb-2 ml-1">Email</label>
+                            <input type="email" placeholder="name@domain.com" class="w-full px-5 py-3.5 rounded-2xl form-input text-sm text-white">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-800 uppercase tracking-widest text-indigo-500 mb-2 ml-1">Password</label>
+                            <input type="password" placeholder="••••••••" class="w-full px-5 py-3.5 rounded-2xl form-input text-sm text-white">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-800 uppercase tracking-widest text-indigo-500 mb-2 ml-1">Confirm Password</label>
+                            <input type="password" placeholder="••••••••" class="w-full px-5 py-3.5 rounded-2xl form-input text-sm text-white">
+                        </div>
+                    </div>
+
+                    <div class="pt-4 text-center">
+                        <button type="submit" class="w-full py-5 bg-indigo-600 hover:bg-indigo-500 text-white font-800 uppercase tracking-widest text-[11px] rounded-2xl transition-all shadow-xl shadow-indigo-600/20 active:scale-[0.98]">
+                            Create Account
+                        </button>
+                    </div>
+
+                    <div class="pt-6 border-t border-white/5 text-center">
+                        <p class="text-[11px] text-gray-500 font-medium">
+                            Already a member? <a href="{%url 'login_page'%}" class="text-indigo-500 font-800 uppercase tracking-widest hover:underline ml-1">Sign In</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
