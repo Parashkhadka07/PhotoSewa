@@ -10,6 +10,8 @@ def login_view(request):
         user=authenticate(request, email=request.POST.get("email"),password=request.POST.get("password"))
         if user is not None:
             login(request,user)
+            if not request.POST.get("remember_me"):
+                request.session.set_expiry(0)
             messages.success(request,"Login Sucessfull !")
             return redirect("home_page")
         else:
