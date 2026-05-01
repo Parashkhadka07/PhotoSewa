@@ -1,133 +1,244 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PhotoSewa | Book Professional Photographers</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    {%block style%}
     <style>
-        body { font-family: 'Roboto', sans-serif; }
-        h1, h2, h3, .brand-font { font-family: 'Montserrat', sans-serif; }
-        .grid-item:hover .overlay { opacity: 1; }
+      body {
+        font-family: "Roboto", sans-serif;
+      }
+      h1,
+      h2,
+      h3,
+      .brand-font {
+        font-family: "Montserrat", sans-serif;
+      }
+      .grid-item:hover .overlay {
+        opacity: 1;
+      }
 
-        /* Toast */
-        .toast {
-            animation: slideIn 0.4s ease, fadeOut 0.5s ease 3.5s forwards;
+      /* Toast */
+      .toast {
+        animation:
+          slideIn 0.4s ease,
+          fadeOut 0.5s ease 3.5s forwards;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(110%);
+          opacity: 0;
         }
-        @keyframes slideIn {
-            from { transform: translateX(110%); opacity: 0; }
-            to   { transform: translateX(0);    opacity: 1; }
+        to {
+          transform: translateX(0);
+          opacity: 1;
         }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to   { opacity: 0; pointer-events: none; }
+      }
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
         }
+        to {
+          opacity: 0;
+          pointer-events: none;
+        }
+      }
     </style>
-</head>
-<body class="bg-gray-50 text-gray-900">
-
+    {%endblock style%}
+    <!--for the extra style-->
+    {%block page_style%} {%endblock page_style%}
+  </head>
+  <body>
     <!-- Toast Container -->
-    <div id="toast-container" class="fixed top-6 right-6 z-[9999] flex flex-col gap-3 w-80">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="toast flex items-start gap-3 px-5 py-4 rounded-2xl shadow-2xl text-sm font-medium
-                    {% if message.tags == 'success' %}
-                        bg-green-500 text-white
-                    {% elif message.tags == 'error' %}
-                        bg-red-500 text-white
-                    {% elif message.tags == 'warning' %}
-                        bg-yellow-400 text-gray-900
-                    {% elif message.tags == 'info' %}
-                        bg-indigo-500 text-white
-                    {% else %}
-                        bg-gray-800 text-white
-                    {% endif %}
-                ">
-                    <!-- Icon -->
-                    <span class="text-lg mt-0.5">
-                        {% if message.tags == 'success' %}
-                            <i class="fa fa-check-circle"></i>
-                        {% elif message.tags == 'error' %}
-                            <i class="fa fa-times-circle"></i>
-                        {% elif message.tags == 'warning' %}
-                            <i class="fa fa-exclamation-triangle"></i>
-                        {% elif message.tags == 'info' %}
-                            <i class="fa fa-info-circle"></i>
-                        {% else %}
-                            <i class="fa fa-bell"></i>
-                        {% endif %}
-                    </span>
+    <div
+      id="toast-container"
+      class="fixed top-6 right-6 z-[9999] flex flex-col gap-3 w-80"
+    >
+      {% if messages %} {% for message in messages %}
+      <div
+        class="toast relative overflow-hidden flex items-start gap-4 px-5 py-4 rounded-2xl shadow-2xl transition-all duration-500 transform {% if message.tags == 'success' %} bg-green-600/95 {% elif message.tags == 'error' %} bg-red-600/95 {% elif message.tags == 'warning' %} bg-yellow-500/95 text-gray-900 {% else %} bg-indigo-600/95 {% endif %} text-white backdrop-blur-md"
+      >
+        <div class="flex-shrink-0 mt-1">
+          {% if message.tags == 'success' %}<i
+            class="fa fa-check-circle text-xl"
+          ></i>
+          {% elif message.tags == 'error' %}<i
+            class="fa fa-times-circle text-xl"
+          ></i>
+          {% else %}<i class="fa fa-info-circle text-xl"></i>{% endif %}
+        </div>
 
-                    <!-- Message Text -->
-                    <span class="flex-1">{{ message }}</span>
+        <div class="flex-1 flex flex-col gap-0.5">
+          <span
+            class="text-[10px] font-900 uppercase tracking-[0.2em] opacity-70"
+            >{{ message.tags|default:"Notice" }}</span
+          >
+          <span class="text-sm font-medium leading-tight">{{ message }}</span>
+        </div>
 
-                    <!-- Close Button -->
-                    <button onclick="this.parentElement.remove()" class="ml-2 opacity-70 hover:opacity-100 transition">
-                        <i class="fa fa-times"></i>
-                    </button>
-                </div>
-            {% endfor %}
-        {% endif %}
+        <button
+          onclick="dismissToast(this.parentElement)"
+          class="opacity-50 hover:opacity-100"
+        >
+          <i class="fa fa-times text-xs"></i>
+        </button>
+
+        <!-- The Progress Bar -->
+        <div
+          class="progress-bar absolute bottom-0 left-0 h-1 bg-white/30 w-full"
+        ></div>
+      </div>
+      {% endfor %} {% endif %}
     </div>
 
-    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20 items-center">
-                <div class="flex items-center">
-                    <span class="text-2xl font-800 tracking-tighter text-indigo-600 brand-font uppercase">Photo<span class="text-black">Sewa</span></span>
-                </div>
-                <div class="hidden md:flex space-x-8 font-medium">
-                    <a href="#" class="hover:text-indigo-600 transition">Explore</a>
-                    <a href="#" class="hover:text-indigo-600 transition">Special Offers</a>
-                    <a href="#" class="hover:text-indigo-600 transition">Find Talent</a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button class="px-5 py-2 font-bold text-indigo-600">Login</button>
-                    <button class="px-6 py-2 bg-black text-white font-bold rounded-full hover:bg-indigo-600 transition">Join as Pro</button>
-                </div>
-            </div>
+    <!--this is for the navbar-->
+    {% block nav_bar %}
+    <nav
+      class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-20 items-center">
+          <div class="flex items-center">
+            <span
+              class="text-2xl font-800 tracking-tighter text-indigo-600 brand-font uppercase"
+              >Photo<span class="text-black">Sewa</span></span
+            >
+          </div>
+          <div class="hidden md:flex space-x-8 font-medium">
+            <a href="#" class="hover:text-indigo-600 transition">Explore</a>
+            <a href="#" class="hover:text-indigo-600 transition"
+              >Special Offers</a
+            >
+            <a href="#" class="hover:text-indigo-600 transition">Find Talent</a>
+          </div>
+          {%if not request.user.is_authenticated%}
+          <div class="flex items-center space-x-4">
+            <a
+              href="{%url 'login_page'%}"
+              class="px-5 py-2 font-bold text-indigo-600"
+              >Login</a
+            >
+
+            <a
+              href="{%url 'registration_page'%}"
+              class="px-6 py-2 bg-black text-white font-bold rounded-full hover:bg-indigo-600 transition"
+              >Sign Up</a
+            >
+            {%else%}
+            <a
+              href="{%url 'logout_page'%}"
+              class="px-6 py-2 bg-black text-white font-bold rounded-full hover:bg-indigo-600 transition"
+              >Log out</a
+            >
+
+            {%endif%}
+          </div>
         </div>
+      </div>
     </nav>
+    {% endblock nav_bar %}
 
-    {% block content %}
-    {% endblock content %}
+    <!--this is for the content of the page-->
+    {%block content%} {% endblock content %}
 
+    <!--this is footer-->
+    {% block footer %}
     <footer class="bg-black text-white pt-20 pb-10">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-                <div class="col-span-1 md:col-span-2">
-                    <span class="text-3xl font-800 text-indigo-500 brand-font uppercase">Photo<span class="text-white">Sewa</span></span>
-                    <p class="mt-6 text-gray-400 max-w-sm">The #1 platform for connecting talented photographers with those who need their vision. From local events to global campaigns.</p>
-                </div>
-                <div>
-                    <h5 class="font-bold uppercase mb-6 tracking-widest">Platform</h5>
-                    <ul class="space-y-4 text-gray-400">
-                        <li><a href="#" class="hover:text-white transition">Browse Pros</a></li>
-                        <li><a href="#" class="hover:text-white transition">How it Works</a></li>
-                        <li><a href="#" class="hover:text-white transition">Safety & Trust</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h5 class="font-bold uppercase mb-6 tracking-widest">Connect</h5>
-                    <div class="flex space-x-6 text-2xl">
-                        <a href="#" class="hover:text-indigo-500 transition"><i class="fa fa-instagram"></i></a>
-                        <a href="#" class="hover:text-indigo-500 transition"><i class="fa fa-facebook"></i></a>
-                        <a href="#" class="hover:text-indigo-500 transition"><i class="fa fa-twitter"></i></a>
-                    </div>
-                </div>
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          <div class="col-span-1 md:col-span-2">
+            <span class="text-3xl font-800 text-indigo-500 brand-font uppercase"
+              >Photo<span class="text-white">Sewa</span></span
+            >
+            <p class="mt-6 text-gray-400 max-w-sm">
+              The #1 platform for connecting talented photographers with those
+              who need their vision. From local events to global campaigns.
+            </p>
+          </div>
+          <div>
+            <h5 class="font-bold uppercase mb-6 tracking-widest">Platform</h5>
+            <ul class="space-y-4 text-gray-400">
+              <li>
+                <a href="#" class="hover:text-white transition">Browse Pros</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition">How it Works</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition"
+                  >Safety & Trust</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h5 class="font-bold uppercase mb-6 tracking-widest">Connect</h5>
+            <div class="flex space-x-6 text-2xl">
+              <a href="#" class="hover:text-indigo-500 transition"
+                ><i class="fa fa-instagram"></i
+              ></a>
+              <a href="#" class="hover:text-indigo-500 transition"
+                ><i class="fa fa-facebook"></i
+              ></a>
+              <a href="#" class="hover:text-indigo-500 transition"
+                ><i class="fa fa-twitter"></i
+              ></a>
             </div>
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between text-gray-500 text-sm">
-                <p>&copy; 2026 PhotoSewa. Built for the creators.</p>
-                <div class="flex space-x-6 mt-4 md:mt-0">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                </div>
-            </div>
+          </div>
         </div>
+        <div
+          class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between text-gray-500 text-sm"
+        >
+          <p>&copy; 2026 PhotoSewa. Built for the creators.</p>
+          <div class="flex space-x-6 mt-4 md:mt-0">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+          </div>
+        </div>
+      </div>
     </footer>
+    {% endblock footer %}
+    <!--this is for script-->
+    {%block script%}
+    <script>
+      function dismissToast(element) {
+        element.style.transform = "translateX(120%)";
+        element.style.opacity = "0";
+        setTimeout(() => {
+          element.remove();
+        }, 500);
+      }
 
-</body>
+      document.addEventListener("DOMContentLoaded", () => {
+        const toasts = document.querySelectorAll(".toast");
+
+        toasts.forEach((toast) => {
+          const bar = toast.querySelector(".progress-bar");
+
+          // 1. Start the progress bar animation immediately
+          // We use a tiny timeout so the browser registers the 100% width first
+          setTimeout(() => {
+            bar.style.transition = "width 5000ms linear";
+            bar.style.width = "0%";
+          }, 10);
+
+          // 2. Dismiss the toast after 5 seconds
+          setTimeout(() => {
+            dismissToast(toast);
+          }, 5000);
+        });
+      });
+    </script>
+    {%endblock script%}
+  </body>
 </html>
