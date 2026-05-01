@@ -41,9 +41,15 @@ class MyUser(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    
+    full_name = models.CharField(max_length=100,default="USER") 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    ROLE_CHOICES = [
+        ("photographer", "Photographer"),
+        ("client", "Client"),
+    ]
+    
+    user_role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="client")
 
     objects = MyUserManager()
 

@@ -12,9 +12,66 @@
         body { font-family: 'Roboto', sans-serif; }
         h1, h2, h3, .brand-font { font-family: 'Montserrat', sans-serif; }
         .grid-item:hover .overlay { opacity: 1; }
+
+        /* Toast */
+        .toast {
+            animation: slideIn 0.4s ease, fadeOut 0.5s ease 3.5s forwards;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(110%); opacity: 0; }
+            to   { transform: translateX(0);    opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to   { opacity: 0; pointer-events: none; }
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-6 right-6 z-[9999] flex flex-col gap-3 w-80">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="toast flex items-start gap-3 px-5 py-4 rounded-2xl shadow-2xl text-sm font-medium
+                    {% if message.tags == 'success' %}
+                        bg-green-500 text-white
+                    {% elif message.tags == 'error' %}
+                        bg-red-500 text-white
+                    {% elif message.tags == 'warning' %}
+                        bg-yellow-400 text-gray-900
+                    {% elif message.tags == 'info' %}
+                        bg-indigo-500 text-white
+                    {% else %}
+                        bg-gray-800 text-white
+                    {% endif %}
+                ">
+                    <!-- Icon -->
+                    <span class="text-lg mt-0.5">
+                        {% if message.tags == 'success' %}
+                            <i class="fa fa-check-circle"></i>
+                        {% elif message.tags == 'error' %}
+                            <i class="fa fa-times-circle"></i>
+                        {% elif message.tags == 'warning' %}
+                            <i class="fa fa-exclamation-triangle"></i>
+                        {% elif message.tags == 'info' %}
+                            <i class="fa fa-info-circle"></i>
+                        {% else %}
+                            <i class="fa fa-bell"></i>
+                        {% endif %}
+                    </span>
+
+                    <!-- Message Text -->
+                    <span class="flex-1">{{ message }}</span>
+
+                    <!-- Close Button -->
+                    <button onclick="this.parentElement.remove()" class="ml-2 opacity-70 hover:opacity-100 transition">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 
     <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,8 +91,10 @@
             </div>
         </div>
     </nav>
-{% block content %}
-{% endblock content %}
+
+    {% block content %}
+    {% endblock content %}
+
     <footer class="bg-black text-white pt-20 pb-10">
         <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
