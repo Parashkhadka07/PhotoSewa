@@ -117,7 +117,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT="static"
 AUTH_USER_MODEL = 'accounts.MyUser'
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
 #SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL="/media/"

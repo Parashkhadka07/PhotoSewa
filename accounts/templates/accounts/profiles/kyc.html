@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity Audit | PhotoSewa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #030303;
+            --accent: #6366f1;
+            --panel: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.07);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-deep);
+            color: #f3f4f6;
+            min-h-screen flex items-center justify-center p-6;
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .upload-zone {
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .step-node.active {
+            background: var(--accent);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+        }
+
+        .input-dark {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: border-color 0.2s;
+        }
+
+        .input-dark:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-[#030303] min-h-screen flex items-center justify-center p-4">
+
+    <!-- Background Elements -->
+    <div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/5 blur-[120px] rounded-full"></div>
+
+    <main class="relative w-full max-w-2xl glass-container rounded-[2.5rem] p-8 md:p-12 overflow-hidden">
+        
+        <!-- Header Section -->
+        <div class="flex justify-between items-start mb-10">
+            <div>
+                <a href="{% url 'profile_page' %}" class="text-[10px] font-800 text-gray-500 uppercase tracking-[0.2em] hover:text-white transition flex items-center mb-4">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Return to Registry
+                </a>
+                <h1 class="text-3xl font-800 tracking-tight text-white">Identity <span class="text-indigo-500">Audit</span></h1>
+                <p class="text-xs text-gray-400 mt-2 font-medium">Verify your credentials to unlock marketplace features.</p>
+            </div>
+            <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10">
+                <i class="fa-solid fa-shield-halved text-indigo-500 text-xl"></i>
+            </div>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="flex items-center justify-between mb-12 px-4">
+            <div class="flex flex-col items-center space-y-2">
+                <div class="step-node active w-3 h-3 rounded-full"></div>
+                <span class="text-[8px] font-800 uppercase tracking-tighter text-indigo-400">Personal</span>
+            </div>
+            <div class="h-[1px] flex-1 bg-white/10 mx-4"></div>
+            <div class="flex flex-col items-center space-y-2">
+                <div class="step-node w-3 h-3 rounded-full bg-white/10"></div>
+                <span class="text-[8px] font-800 uppercase tracking-tighter text-gray-600">Documents</span>
+            </div>
+            <div class="h-[1px] flex-1 bg-white/10 mx-4"></div>
+            <div class="flex flex-col items-center space-y-2">
+                <div class="step-node w-3 h-3 rounded-full bg-white/10"></div>
+                <span class="text-[8px] font-800 uppercase tracking-tighter text-gray-600">Review</span>
+            </div>
+        </div>
+
+        <form action="#" method="POST" class="space-y-8">
+            <!-- ID Type Selection -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="text-[9px] font-800 text-gray-500 uppercase tracking-widest ml-1">Document Type</label>
+                    <select class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white appearance-none cursor-pointer">
+                        <option>Citizenship Card (Nepal)</option>
+                        <option>National ID</option>
+                        <option>Passport</option>
+                        <option>Driving License</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[9px] font-800 text-gray-500 uppercase tracking-widest ml-1">Document Number</label>
+                    <input type="text" placeholder="e.g. 12-01-78-XXXXX" class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white font-mono">
+                </div>
+            </div>
+
+            <!-- Upload Area -->
+            <div class="space-y-4">
+                <label class="text-[9px] font-800 text-gray-500 uppercase tracking-widest ml-1">Evidence Upload</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Front Side -->
+                    <div class="upload-zone rounded-3xl p-6 text-center cursor-pointer group">
+                        <input type="file" class="hidden" id="front-id">
+                        <label for="front-id" class="cursor-pointer">
+                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-600 group-hover:text-indigo-400 mb-3 transition-colors"></i>
+                            <p class="text-[10px] font-700 uppercase tracking-widest text-gray-400 group-hover:text-white">Front View</p>
+                            <p class="text-[8px] text-gray-600 mt-1">PNG, JPG up to 5MB</p>
+                        </label>
+                    </div>
+                    <!-- Back Side -->
+                    <div class="upload-zone rounded-3xl p-6 text-center cursor-pointer group">
+                        <input type="file" class="hidden" id="back-id">
+                        <label for="back-id" class="cursor-pointer">
+                            <i class="fa-solid fa-address-card text-2xl text-gray-600 group-hover:text-indigo-400 mb-3 transition-colors"></i>
+                            <p class="text-[10px] font-700 uppercase tracking-widest text-gray-400 group-hover:text-white">Back View</p>
+                            <p class="text-[8px] text-gray-600 mt-1">Required for Citizenship</p>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="p-6 bg-indigo-500/5 rounded-2xl border border-indigo-500/10 flex items-start space-x-4">
+                <i class="fa-solid fa-lock text-indigo-500 mt-1"></i>
+                <p class="text-[10px] text-indigo-300/80 leading-relaxed font-medium">
+                    Your documents are encrypted end-to-end. We use this data strictly for legal compliance and identity verification. Once verified, these files are stored in a secure offline vault.
+                </p>
+            </div>
+
+            <!-- Action Buttons -->
+             \
+            <div class="flex flex-col md:flex-row gap-4 pt-4">
+                <button type="submit" class="flex-1 py-4 bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-900 uppercase tracking-[0.2em] rounded-2xl transition shadow-xl shadow-indigo-600/20 active:scale-[0.98]">
+                    Submit for Review
+                </button>
+            </div>
+        </form>
+
+        <!-- Footer -->
+        <div class="mt-10 pt-8 border-t border-white/5 text-center">
+            <p class="text-[9px] text-gray-600 font-medium uppercase tracking-widest">
+                Verification usually takes <span class="text-gray-400">24-48 business hours</span>
+            </p>
+        </div>
+    </main>
+
+</body>
+</html>

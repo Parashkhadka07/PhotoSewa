@@ -19,13 +19,9 @@
         font-family: "Roboto", sans-serif;
         background-color: #050505;
         color: white;
-        overflow: hidden;
+        overflow: hidden; /* Strict non-scrollable constraint */
       }
-      h1,
-      h2,
-      .brand-font {
-        font-family: "Montserrat", sans-serif;
-      }
+      h1, h2, .brand-font { font-family: "Montserrat", sans-serif; }
 
       .glass-panel {
         background: rgba(255, 255, 255, 0.02);
@@ -45,18 +41,10 @@
         background: rgba(255, 255, 255, 0.07);
       }
 
-      .back-nav-white {
-        transition: all 0.3s ease;
-        color: white;
-      }
-      .back-nav-white:hover {
-        opacity: 0.7;
-        transform: translateX(-4px);
-      }
+      .back-nav-white { transition: all 0.3s ease; color: white; }
+      .back-nav-white:hover { opacity: 0.7; transform: translateX(-4px); }
 
-      .role-pill {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
+      .role-pill { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
       input:checked + .role-pill {
         background: #4f46e5;
         border-color: #4f46e5;
@@ -66,244 +54,113 @@
       .error-text {
         color: #f87171;
         font-size: 10px;
-        margin-top: 4px;
-        margin-left: 4px;
+        margin-top: 2px;
         font-weight: 500;
-        letter-spacing: 0.05em;
       }
+
+      /* Webkit scrollbar removal (just in case browser tries to force it) */
+      ::-webkit-scrollbar { display: none; }
     </style>
   </head>
-  <body class="h-screen flex items-center justify-center p-4">
+  <body class="h-screen flex items-center justify-center p-6 md:p-12 lg:p-16">
     <div class="fixed inset-0 z-0">
-      <div
-        class="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-indigo-900/10 blur-[100px] rounded-full"
-      ></div>
+      <div class="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-indigo-900/10 blur-[100px] rounded-full"></div>
     </div>
 
-    <a href="{% url 'home_page' %}"
-      class="fixed top-8 left-8 z-50 flex items-center space-x-3 back-nav-white group"
-    >
-      <i class="fa fa-arrow-left text-xl"></i>
+    <a href="{% url 'home_page' %}" class="fixed top-6 left-8 z-50 flex items-center space-x-3 back-nav-white group">
+      <i class="fa fa-arrow-left text-lg"></i>
       <span class="text-[10px] font-800 uppercase tracking-[0.3em]">Back</span>
     </a>
 
-    <main
-      class="relative z-10 w-full max-w-4xl grid lg:grid-cols-2 gap-0 overflow-hidden rounded-[2rem] glass-panel shadow-2xl"
-    >
+    <main class="relative z-10 w-full max-w-4xl max-h-[90vh] grid lg:grid-cols-2 gap-0 overflow-hidden rounded-[2rem] glass-panel shadow-2xl">
       <!-- Left Panel -->
-      <div
-        class="hidden lg:flex p-12 flex-col justify-between bg-black/40 border-r border-white/5"
-      >
+      <div class="hidden lg:flex p-10 flex-col justify-between bg-black/40 border-r border-white/5">
         <div>
-          <span
-            class="text-xl font-800 tracking-tighter text-indigo-500 brand-font italic uppercase"
-            >Photo<span class="text-white">Sewa</span></span
-          >
-          <h1
-            class="mt-12 text-5xl font-800 leading-none uppercase tracking-tighter"
-          >
+          <span class="text-xl font-800 tracking-tighter text-indigo-500 brand-font italic uppercase">Photo<span class="text-white">Sewa</span></span>
+          <h1 class="mt-8 text-5xl font-800 leading-none uppercase tracking-tighter">
             Join the <br /><span class="text-indigo-500">Circle.</span>
           </h1>
-          <p
-            class="mt-6 text-gray-400 text-sm font-light leading-relaxed max-w-xs"
-          >
+          <p class="mt-4 text-gray-400 text-xs font-light leading-relaxed max-w-xs">
             Nepal's elite visual storytelling community awaits your perspective.
           </p>
         </div>
-
-        <div
-          class="text-[9px] font-800 uppercase tracking-[0.4em] text-gray-700"
-        >
-          PHOTOSEWA...........................................
-        </div>
+        <div class="text-[9px] font-800 uppercase tracking-[0.4em] text-gray-700">PHOTOSEWA...........................................</div>
       </div>
 
       <!-- Right Panel -->
-      <div class="p-10 md:p-14 bg-white/5 flex items-center">
+      <div class="p-8 md:p-12 bg-white/5 flex items-center">
         <div class="max-w-xs mx-auto lg:max-w-none w-full">
-          <div class="mb-8">
-            <h2 class="text-3xl font-800 uppercase tracking-tight">Register</h2>
-            <p class="text-gray-500 text-[11px] font-medium tracking-wide mt-2">
-              Start your journey today.
-            </p>
+          <div class="mb-6">
+            <h2 class="text-2xl font-800 uppercase tracking-tight">Register</h2>
+            <p class="text-gray-500 text-[10px] font-medium tracking-wide mt-1">Start your journey today.</p>
           </div>
 
-          <!-- Success Message -->
           {% if messages %}
             {% for message in messages %}
-              <p class="error-text text-green-400 mb-4">{{ message }}</p>
+              <p class="error-text text-green-400 mb-2">{{ message }}</p>
             {% endfor %}
           {% endif %}
 
-          <form
-            action="{% url 'registration_page' %}"
-            method="post"
-            class="space-y-5"
-          >
+          <form action="{% url 'registration_page' %}" method="post" class="space-y-3">
             {% csrf_token %}
 
-            <!-- Role Selection -->
-            <div class="grid grid-cols-2 gap-3 mb-6">
+            <!-- Role Selection (Reduced Padding) -->
+            <div class="grid grid-cols-2 gap-3 mb-4">
               <label class="cursor-pointer">
-                <input
-                  type="radio"
-                  name="user_role"
-                  value="client"
-                  class="hidden"
-                  checked
-                />
-                <div
-                  class="role-pill py-2.5 border border-white/10 rounded-xl text-center text-[9px] font-800 uppercase tracking-widest text-gray-500"
-                >
-                  Client
-                </div>
+                <input type="radio" name="user_role" value="client" class="hidden" checked />
+                <div class="role-pill py-2 border border-white/10 rounded-xl text-center text-[9px] font-800 uppercase tracking-widest text-gray-500">Client</div>
               </label>
               <label class="cursor-pointer">
-                <input
-                  type="radio"
-                  name="user_role"
-                  value="photographer"
-                  class="hidden"
-                />
-                <div
-                  class="role-pill py-2.5 border border-white/10 rounded-xl text-center text-[9px] font-800 uppercase tracking-widest text-gray-500"
-                >
-                  Photographer
-                </div>
+                <input type="radio" name="user_role" value="photographer" class="hidden" />
+                <div class="role-pill py-2 border border-white/10 rounded-xl text-center text-[9px] font-800 uppercase tracking-widest text-gray-500">Photographer</div>
               </label>
             </div>
 
-            <!-- user_role error -->
-            {% if form.user_role.errors %}
-              {% for error in form.user_role.errors %}
-                <p class="error-text">{{ error }}</p>
-              {% endfor %}
-            {% endif %}
-
-            <div class="space-y-4">
-
-              <!-- Full Name -->
+            <div class="space-y-3">
+              <!-- Inputs (Reduced Padding from 3.5 to 2.5) -->
               <div>
-                <label
-                  class="block text-[9px] font-800 uppercase tracking-widest text-indigo-500 mb-2 ml-1"
-                  >Full Name</label
-                >
-                <input
-                  name="full_name"
-                  type="text"
-                  placeholder="John Doe"
-                  value="{{ request.POST.full_name }}"
-                  class="w-full px-5 py-3.5 rounded-2xl form-input text-sm text-white"
-                />
-                {% if form.full_name.errors %}
-                  {% for error in form.full_name.errors %}
-                    <p class="error-text">{{ error }}</p>
-                  {% endfor %}
-                {% endif %}
+                <label class="block text-[8px] font-800 uppercase tracking-widest text-indigo-500 mb-1 ml-1">Full Name</label>
+                <input name="full_name" type="text" placeholder="John Doe" value="{{ request.POST.full_name }}" class="w-full px-4 py-2.5 rounded-xl form-input text-sm text-white" />
+                {% if form.full_name.errors %}{% for error in form.full_name.errors %}<p class="error-text">{{ error }}</p>{% endfor %}{% endif %}
               </div>
 
-              <!-- Email -->
               <div>
-                <label
-                  class="block text-[9px] font-800 uppercase tracking-widest text-indigo-500 mb-2 ml-1"
-                  >Email</label
-                >
-                <input
-                  name="email"
-                  type="email"
-                  placeholder="name@domain.com"
-                  value="{{ request.POST.email }}"
-                  class="w-full px-5 py-3.5 rounded-2xl form-input text-sm text-white"
-                />
-                {% if form.email.errors %}
-                  {% for error in form.email.errors %}
-                    <p class="error-text">{{ error }}</p>
-                  {% endfor %}
-                {% endif %}
+                <label class="block text-[8px] font-800 uppercase tracking-widest text-indigo-500 mb-1 ml-1">Email</label>
+                <input name="email" type="email" placeholder="name@domain.com" value="{{ request.POST.email }}" class="w-full px-4 py-2.5 rounded-xl form-input text-sm text-white" />
+                {% if form.email.errors %}{% for error in form.email.errors %}<p class="error-text">{{ error }}</p>{% endfor %}{% endif %}
               </div>
 
-              <!-- Password -->
               <div>
-                <label class="block text-[9px] font-800 uppercase tracking-widest text-indigo-500 mb-2 ml-1">
-                  Password
-                </label>
+                <label class="block text-[8px] font-800 uppercase tracking-widest text-indigo-500 mb-1 ml-1">Password</label>
                 <div class="relative">
-                  <input
-                    name="password1"
-                    id="password1"
-                    type="password"
-                    placeholder="••••••••"
-                    class="w-full px-5 py-3.5 rounded-2xl form-input text-sm text-white pr-12"
-                    oninput="handleEye('password1', 'eye-btn-1')"
-                  />
-                  <button
-                    type="button"
-                    id="eye-btn-1"
-                    disabled
-                    onclick="togglePassword('password1', 'eye1')"
-                    class="absolute right-4 top-1/2 -translate-y-1/2 text-indigo-400 hover:text-indigo-300 transition-colors disabled:opacity-25 disabled:cursor-not-allowed"
-                  >
-                    <i id="eye1" class="fa fa-eye-slash text-sm"></i>
+                  <input name="password1" id="password1" type="password" placeholder="••••••••" class="w-full px-4 py-2.5 rounded-xl form-input text-sm text-white pr-10" oninput="handleEye('password1', 'eye-btn-1')" />
+                  <button type="button" id="eye-btn-1" disabled onclick="togglePassword('password1', 'eye1')" class="absolute right-3 top-1/2 -translate-y-1/2 text-indigo-400 hover:text-indigo-300 transition-colors disabled:opacity-25">
+                    <i id="eye1" class="fa fa-eye-slash text-xs"></i>
                   </button>
                 </div>
-                {% if form.password1.errors %}
-                  {% for error in form.password1.errors %}
-                    <p class="error-text">{{ error }}</p>
-                  {% endfor %}
-                {% endif %}
+                {% if form.password1.errors %}{% for error in form.password1.errors %}<p class="error-text">{{ error }}</p>{% endfor %}{% endif %}
               </div>
 
-              <!-- Confirm Password -->
               <div>
-                <label class="block text-[9px] font-800 uppercase tracking-widest text-indigo-500 mb-2 ml-1">
-                  Confirm Password
-                </label>
+                <label class="block text-[8px] font-800 uppercase tracking-widest text-indigo-500 mb-1 ml-1">Confirm Password</label>
                 <div class="relative">
-                  <input
-                    name="password2"
-                    id="password2"
-                    type="password"
-                    placeholder="••••••••"
-                    class="w-full px-5 py-3.5 rounded-2xl form-input text-sm text-white pr-12"
-                    oninput="handleEye('password2', 'eye-btn-2')"
-                  />
-                  <button
-                    type="button"
-                    id="eye-btn-2"
-                    disabled
-                    onclick="togglePassword('password2', 'eye2')"
-                    class="absolute right-4 top-1/2 -translate-y-1/2 text-indigo-400 hover:text-indigo-300 transition-colors disabled:opacity-25 disabled:cursor-not-allowed"
-                  >
-                    <i id="eye2" class="fa fa-eye-slash text-sm"></i>
+                  <input name="password2" id="password2" type="password" placeholder="••••••••" class="w-full px-4 py-2.5 rounded-xl form-input text-sm text-white pr-10" oninput="handleEye('password2', 'eye-btn-2')" />
+                  <button type="button" id="eye-btn-2" disabled onclick="togglePassword('password2', 'eye2')" class="absolute right-3 top-1/2 -translate-y-1/2 text-indigo-400 hover:text-indigo-300 transition-colors disabled:opacity-25">
+                    <i id="eye2" class="fa fa-eye-slash text-xs"></i>
                   </button>
                 </div>
-                {% if form.password2.errors %}
-                  {% for error in form.password2.errors %}
-                    <p class="error-text">{{ error }}</p>
-                  {% endfor %}
-                {% endif %}
+                {% if form.password2.errors %}{% for error in form.password2.errors %}<p class="error-text">{{ error }}</p>{% endfor %}{% endif %}
               </div>
-
             </div>
 
-            <div class="pt-4 text-center">
-              <button
-                type="submit"
-                class="w-full py-5 bg-indigo-600 hover:bg-indigo-500 text-white font-800 uppercase tracking-widest text-[11px] rounded-2xl transition-all shadow-xl shadow-indigo-600/20 active:scale-[0.98]"
-              >
+            <div class="pt-4">
+              <button type="submit" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-800 uppercase tracking-widest text-[10px] rounded-xl transition-all shadow-xl shadow-indigo-600/20 active:scale-[0.98]">
                 Create Account
               </button>
             </div>
 
-            <div class="pt-6 border-t border-white/5 text-center">
-              <p class="text-[11px] text-gray-500 font-medium">
-                Already a member?
-                <a
-                  href="{% url 'login_page' %}"
-                  class="text-indigo-500 font-800 uppercase tracking-widest hover:underline ml-1"
-                  >Sign In</a
-                >
-              </p>
+            <div class="pt-4 border-t border-white/5 text-center">
+              <p class="text-[10px] text-gray-500 font-medium">Already a member? <a href="{% url 'login_page' %}" class="text-indigo-500 font-800 uppercase tracking-widest hover:underline ml-1">Sign In</a></p>
             </div>
           </form>
         </div>
@@ -313,20 +170,17 @@
     <script>
       function handleEye(inputId, btnId) {
         const input = document.getElementById(inputId);
-        const btn   = document.getElementById(btnId);
+        const btn = document.getElementById(btnId);
         btn.disabled = input.value.length === 0;
-
-        // reset to hidden if field is cleared
         if (input.value.length === 0) {
           input.type = 'password';
           const icon = btn.querySelector('i');
           icon.classList.replace('fa-eye', 'fa-eye-slash');
         }
       }
-
       function togglePassword(inputId, iconId) {
         const input = document.getElementById(inputId);
-        const icon  = document.getElementById(iconId);
+        const icon = document.getElementById(iconId);
         if (input.type === 'password') {
           input.type = 'text';
           icon.classList.replace('fa-eye-slash', 'fa-eye');
