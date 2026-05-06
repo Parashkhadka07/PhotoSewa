@@ -1,6 +1,4 @@
-{%extends "main/base.html"%}
-{%load static%}
-{% block page_style %}
+{%extends "main/base.html"%} {%load static%} {% block page_style %}
 <style>
   :root {
     --bg-deep: #030303;
@@ -78,7 +76,7 @@
     border-radius: 10px;
   }
 </style>
-{% endblock page_style %} {% block nav_bar %} {% endblock nav_bar %} 
+{% endblock page_style %} {% block nav_bar %} {% endblock nav_bar %}
 <!--this is main content-->
 {% block content %}
 <!-- Main Wrapper replacing the body tag -->
@@ -97,7 +95,10 @@
         >
           <i class="fa-solid fa-camera-retro text-white text-lg"></i>
         </div>
-        <a href="{%url 'home_page'%}" class="text-xl font-800 tracking-tighter uppercase italic">
+        <a
+          href="{%url 'home_page'%}"
+          class="text-xl font-800 tracking-tighter uppercase italic"
+        >
           Photo<span class="text-indigo-500">Sewa</span>
         </a>
       </div>
@@ -148,7 +149,6 @@
         <span class="text-[9px] font-800 uppercase tracking-widest"
           >Sign Out</span
         >
-        
       </button>
     </div>
   </aside>
@@ -183,14 +183,15 @@
       >
         <div
           class="avatar-container shadow-2xl relative w-32 h-32 rounded-full overflow-hidden border-4 border-white/10 group"
-        >{%if user.profile.profile_photo %}
+        >
+          {%if user.profile.profile_photo %}
           <img
             id="avatar-preview"
             src="{{user.profile.profile_photo.url}}"
             class="w-full h-full object-cover"
           />
           {%else%}
-           <img
+          <img
             id="avatar-preview"
             src="{%static 'accounts/images/profile.jpg'%}"
             class="w-full h-full object-cover"
@@ -224,7 +225,17 @@
           </div>
           <h1 class="text-3xl md:text-4xl font-800 tracking-tight text-white">
             {{ request.user.full_name | default:"User"}}
+
+            <!-- Verification Badge Logic -->
+            {% if user.profile.kyc_verified == 'varified ' %}
+            <!-- Verified: Indigo Shield -->
+            <i class="fa fa-shield text-indigo-500 text-4xl"></i>
+            {% else %}
+            <!-- Pending/Unverified: Amber Hourglass -->
+            <i class="fa fa-hourglass-half text-amber-500 text-4xl"></i>
+            {% endif %}
           </h1>
+
           <p class="text-sm text-gray-500 mt-2 font-medium italic">
             Member since {{ user.profile.created_at }}
           </p>
@@ -260,29 +271,22 @@
           </div>
         </div>
 
-        <div class="glass-panel p-8 rounded-[2.5rem] bg-white/5 border border-white/5">
-    <p class="text-[10px] font-800 text-gray-500 uppercase tracking-[0.2em] mb-4">
-        KYC Audit
-    </p>
-    <div class="flex items-center justify-between">
-        <h3 class="text-2xl font-800 uppercase italic 
-            {% if user.profile.kyc_verified == 'in_review' %}
-                text-yellow-500
-            {% elif user.profile.kyc_verified == 'varified' %}
-                text-green-500
-            {% elif user.profile.kyc_verified == 'rejected' %}
-                text-red-500
-            {% elif user.profile.kyc_verified == 'not_varified' %}
-                text-gray-500
-            {% else %}
-                text-white
-            {% endif %}">
-            {{ user.profile.get_kyc_verified_display }}
-        </h3>
-
-        
-    </div>
-</div>
+        <div
+          class="glass-panel p-8 rounded-[2.5rem] bg-white/5 border border-white/5"
+        >
+          <p
+            class="text-[10px] font-800 text-gray-500 uppercase tracking-[0.2em] mb-4"
+          >
+            KYC Audit
+          </p>
+          <div class="flex items-center justify-between">
+            <h3
+              class="text-2xl font-800 uppercase italic {% if user.profile.kyc_verified == 'in_review' %} text-yellow-500 {% elif user.profile.kyc_verified == 'varified' %} text-green-500 {% elif user.profile.kyc_verified == 'rejected' %} text-red-500 {% elif user.profile.kyc_verified == 'not_varified' %} text-gray-500 {% else %} text-white {% endif %}"
+            >
+              {{ user.profile.get_kyc_verified_display }}
+            </h3>
+          </div>
+        </div>
 
         <div
           class="glass-panel p-8 rounded-[2.5rem] bg-indigo-600/10 border border-indigo-500/20"
@@ -363,7 +367,7 @@
             <h4
               class="text-xl font-800 tracking-tight text-white mb-4 leading-tight"
             >
-              Verification <br />Required
+              KYC Verification <br />Required
             </h4>
             <p class="text-xs text-gray-400 leading-relaxed">
               Upload your documents to unlock the professional badge and start
@@ -371,7 +375,7 @@
             </p>
           </div>
           <a
-            href="#"
+            href="{%url 'kyc_page' %}"
             class="mt-8 w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-900 uppercase tracking-[0.2em] rounded-2xl text-center transition-all shadow-xl shadow-indigo-600/20"
           >
             Start Audit
@@ -382,19 +386,38 @@
   </main>
 
   <!-- Signout Confirmation Modal -->
-  <div id="signout-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-    <div class="glass-panel w-full max-w-xs p-8 rounded-[2rem] border-white/10 shadow-2xl transition-all">
+  <div
+    id="signout-modal"
+    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+  >
+    <div
+      class="glass-panel w-full max-w-xs p-8 rounded-[2rem] border-white/10 shadow-2xl transition-all"
+    >
       <div class="text-center">
-        <div class="w-12 h-12 bg-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <div
+          class="w-12 h-12 bg-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4"
+        >
           <i class="fa-solid fa-right-from-bracket text-red-500"></i>
         </div>
-        <h3 class="text-lg font-800 text-white uppercase italic tracking-tight mb-2">Sign Out?</h3>
-        <p class="text-xs text-gray-500 mb-8 leading-relaxed">Are you sure you want to end your current session?</p>
+        <h3
+          class="text-lg font-800 text-white uppercase italic tracking-tight mb-2"
+        >
+          Sign Out?
+        </h3>
+        <p class="text-xs text-gray-500 mb-8 leading-relaxed">
+          Are you sure you want to end your current session?
+        </p>
         <div class="flex flex-col gap-3">
-          <a href="{%url 'logout_page'%}" class="w-full py-3 bg-red-600 hover:bg-red-500 text-white text-[10px] font-900 uppercase tracking-widest rounded-xl transition-all">
+          <a
+            href="{%url 'logout_page'%}"
+            class="w-full py-3 bg-red-600 hover:bg-red-500 text-white text-[10px] font-900 uppercase tracking-widest rounded-xl transition-all"
+          >
             Confirm Logout
           </a>
-          <button onclick="toggleSignoutModal(false)" class="w-full py-3 bg-white/5 hover:bg-white/10 text-gray-400 text-[10px] font-900 uppercase tracking-widest rounded-xl transition-all">
+          <button
+            onclick="toggleSignoutModal(false)"
+            class="w-full py-3 bg-white/5 hover:bg-white/10 text-gray-400 text-[10px] font-900 uppercase tracking-widest rounded-xl transition-all"
+          >
             Cancel
           </button>
         </div>
@@ -409,13 +432,13 @@
     }
 
     function toggleSignoutModal(show) {
-      const modal = document.getElementById('signout-modal');
+      const modal = document.getElementById("signout-modal");
       if (show) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
       } else {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
       }
     }
 
@@ -429,6 +452,4 @@
     }
   </script>
 </div>
-{% endblock content %}
- {% block footer %}
-  {% endblock footer %}```
+{% endblock content %} {% block footer %} {% endblock footer %}```

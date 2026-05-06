@@ -20,7 +20,6 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-deep);
             color: #f3f4f6;
-            min-h-screen flex items-center justify-center p-6;
         }
 
         .glass-container {
@@ -33,6 +32,8 @@
         .upload-zone {
             border: 2px dashed rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
+            position: relative;
+            min-height: 140px;
         }
 
         .upload-zone:hover {
@@ -40,32 +41,101 @@
             background: rgba(99, 102, 241, 0.05);
         }
 
+        .upload-zone.has-file {
+            border-color: rgba(99, 102, 241, 0.5);
+            border-style: solid;
+        }
+
+        .upload-zone .preview-inner {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            overflow: hidden;
+        }
+
+        .upload-zone.has-file .preview-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-zone .preview-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: inherit;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 10;
+            width: 24px;
+            height: 24px;
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #f87171;
+            font-size: 9px;
+        }
+
+        .upload-zone.has-file .remove-btn { display: flex; }
+
         .step-node.active {
             background: var(--accent);
             box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
         }
 
+        .step-line.active { background: var(--accent); }
+
         .input-dark {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: border-color 0.2s;
+            color-scheme: dark;
         }
 
         .input-dark:focus {
             border-color: var(--accent);
             outline: none;
         }
+
+        select option {
+            background-color: #111827;
+            color: white;
+        }
+
+        .input-locked {
+            opacity: 0.55;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .zone-locked {
+            opacity: 0.55;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
+        /* hide remove btn when locked */
+        .zone-locked .remove-btn { display: none !important; }
     </style>
 </head>
 <body class="bg-[#030303] min-h-screen flex items-center justify-center p-4">
 
-    <!-- Background Elements -->
     <div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full"></div>
     <div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/5 blur-[120px] rounded-full"></div>
 
     <main class="relative w-full max-w-2xl glass-container rounded-[2.5rem] p-8 md:p-12 overflow-hidden">
-        
-        <!-- Header Section -->
+
         <div class="flex justify-between items-start mb-10">
             <div>
                 <a href="{% url 'profile_page' %}" class="text-[10px] font-800 text-gray-500 uppercase tracking-[0.2em] hover:text-white transition flex items-center mb-4">
@@ -79,91 +149,352 @@
             </div>
         </div>
 
-        <!-- Progress Tracker -->
+        <!-- Progress Bar -->
         <div class="flex items-center justify-between mb-12 px-4">
             <div class="flex flex-col items-center space-y-2">
-                <div class="step-node active w-3 h-3 rounded-full"></div>
-                <span class="text-[8px] font-800 uppercase tracking-tighter text-indigo-400">Personal</span>
+                <div id="step-1-node" class="step-node active w-3 h-3 rounded-full"></div>
+                <span id="step-1-label" class="text-[8px] font-800 uppercase tracking-tighter text-indigo-400">Data fillup</span>
             </div>
-            <div class="h-[1px] flex-1 bg-white/10 mx-4"></div>
+            <div id="step-1-line" class="step-line h-[1px] active flex-1 bg-indigo-500 mx-4"></div>
             <div class="flex flex-col items-center space-y-2">
-                <div class="step-node w-3 h-3 rounded-full bg-white/10"></div>
-                <span class="text-[8px] font-800 uppercase tracking-tighter text-gray-600">Documents</span>
+                <div id="step-2-node" class="step-node active w-3 h-3 rounded-full"></div>
+                <span id="step-2-label" class="text-[8px] font-800 uppercase tracking-tighter text-indigo-400">Document Submitted</span>
             </div>
-            <div class="h-[1px] flex-1 bg-white/10 mx-4"></div>
+            <div id="step-2-line" class="step-line active h-[1px] flex-1 bg-white/10 mx-4"></div>
             <div class="flex flex-col items-center space-y-2">
-                <div class="step-node w-3 h-3 rounded-full bg-white/10"></div>
-                <span class="text-[8px] font-800 uppercase tracking-tighter text-gray-600">Review</span>
+                <div id="step-3-node" class="step-node active w-3 h-3 rounded-full bg-white/10"></div>
+                <span id="step-3-label" class="text-[8px]  font-800 uppercase tracking-tighter text-indigo-400">KYC Verification</span>
             </div>
         </div>
 
-        <form action="#" method="POST" class="space-y-8">
-            <!-- ID Type Selection -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="space-y-2">
-                    <label class="text-[9px] font-800 text-gray-500 uppercase tracking-widest ml-1">Document Type</label>
-                    <select class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white appearance-none cursor-pointer">
-                        <option>Citizenship Card (Nepal)</option>
-                        <option>National ID</option>
-                        <option>Passport</option>
-                        <option>Driving License</option>
-                    </select>
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[9px] font-800 text-gray-500 uppercase tracking-widest ml-1">Document Number</label>
-                    <input type="text" placeholder="e.g. 12-01-78-XXXXX" class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white font-mono">
+        <form action="{% url 'kyc_page' %}" method="POST" class="space-y-6" id="audit-form" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- ── STATUS BANNER ── -->
+            {% if user.profile.kyc_verified == 'in_review' %}
+            <div class="flex items-start gap-3 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-300" role="alert">
+                <i class="fa-solid fa-clock-rotate-left mt-0.5"></i>
+                <div>
+                    <p class="text-[11px] font-bold uppercase tracking-widest">Under Review</p>
+                    <p class="text-[12px] opacity-80 mt-0.5">Your KYC is being verified. You cannot edit your details until the review is complete.</p>
                 </div>
             </div>
 
-            <!-- Upload Area -->
+            {% elif user.profile.kyc_verified == 'varified' %}
+            <div class="flex items-start gap-3 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300" role="alert">
+                <i class="fa-solid fa-circle-check mt-0.5"></i>
+                <div>
+                    <p class="text-[11px] font-bold uppercase tracking-widest">KYC Verified</p>
+                    <p class="text-[12px] opacity-80 mt-0.5">Your identity has been successfully verified. Details are locked.</p>
+                </div>
+            </div>
+
+            {% elif user.profile.kyc_verified == 'rejected' %}
+            <div class="flex items-start gap-3 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300" role="alert">
+                <i class="fa-solid fa-circle-xmark mt-0.5"></i>
+                <div>
+                    <p class="text-[11px] font-bold uppercase tracking-widest">Submission Rejected</p>
+                    <p class="text-[12px] opacity-80 mt-0.5">
+                        {% if user.profile.rejection_reason %}Reason: <strong>{{ user.profile.rejection_reason }}</strong>. {% endif %}
+                        Please correct your details and resubmit.
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- ── NON-FIELD ERRORS ── -->
+            {% if form.non_field_errors %}
+            <div class="flex items-start gap-3 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300" role="alert">
+                <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
+                <ul class="text-[12px] list-disc ml-3">
+                    {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- ── PERSONAL DATA ROW ── -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <!-- Full Name -->
+                <div class="space-y-1">
+                    <label class="text-[9px] font-800 text-gray-500 uppercase tracking-widest ml-1">Full Name (Per ID)</label>
+                    <input
+                        name="full_name"
+                        type="text"
+                        placeholder="Parash Khadka"
+                        value="{{ user.profile.full_name|default:'' }}"
+                        class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white focus:border-indigo-500
+                            {% if form.full_name.errors %}border !border-red-500 shadow shadow-red-500/20{% endif %}
+                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}input-locked{% endif %}"
+                        {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                        required
+                    >
+                    {% for error in form.full_name.errors %}
+                    <p class="flex items-center gap-1 text-[11px] text-red-400 ml-1">
+                        <i class="fa-solid fa-circle-exclamation text-[10px]"></i> {{ error }}
+                    </p>
+                    {% endfor %}
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="space-y-1">
+                    <label class="text-[9px] font-800 text-gray-500 uppercase tracking-widest ml-1">Date of Birth</label>
+                    <input
+                        name="date_of_birth"
+                        type="date"
+                        value="{{ user.profile.date_of_birth|date:'Y-m-d'|default:''}}"
+                        class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white appearance-none
+                            {% if form.date_of_birth.errors %}border !border-red-500 shadow shadow-red-500/20{% endif %}
+                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}input-locked{% endif %}"
+                        {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                        required
+                    >
+                    {% for error in form.date_of_birth.errors %}
+                    <p class="flex items-center gap-1 text-[11px] text-red-400 ml-1">
+                        <i class="fa-solid fa-circle-exclamation text-[10px]"></i> {{ error }}
+                    </p>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <!-- ── DOCUMENT DETAILS ROW ── -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                <!-- Document Type -->
+                <div class="space-y-1 relative">
+                    <label class="text-[9px] font-800 text-gray-500 uppercase tracking-widest ml-1">Document Type</label>
+                    <div class="relative">
+                        <select
+                            name="document_type"
+                            class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white appearance-none cursor-pointer
+                                {% if form.document_type.errors %}border !border-red-500 shadow shadow-red-500/20{% endif %}
+                                {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}input-locked{% endif %}"
+                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                            required
+                        >
+                            <option value="" disabled {% if not user.profile.document_type %}selected{% endif %}>Select Type</option>
+                            <option value="Citizenship"     {% if user.profile.document_type == 'Citizenship'     %}selected{% endif %}>Citizenship Card</option>
+                            <option value="national_id"     {% if user.profile.document_type == 'national_id'     %}selected{% endif %}>National ID</option>
+                            <option value="passport"        {% if user.profile.document_type == 'passport'        %}selected{% endif %}>Passport</option>
+                            <option value="driving_License" {% if user.profile.document_type == 'driving_License' %}selected{% endif %}>Driving License</option>
+                        </select>
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 text-[10px]">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    {% for error in form.document_type.errors %}
+                    <p class="flex items-center gap-1 text-[11px] text-red-400 ml-1">
+                        <i class="fa-solid fa-circle-exclamation text-[10px]"></i> {{ error }}
+                    </p>
+                    {% endfor %}
+                </div>
+
+                <!-- Document Number -->
+                <div class="space-y-1">
+                    <label class="text-[9px] font-800 text-gray-500 uppercase tracking-widest ml-1">Document Number</label>
+                    <input
+                        name="document_number"
+                        type="text"
+                        placeholder="ID Number"
+                        value="{{ user.profile.document_number|default:'' }}"
+                        class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white font-mono
+                            {% if form.document_number.errors %}border !border-red-500 shadow shadow-red-500/20{% endif %}
+                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}input-locked{% endif %}"
+                        {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                        required
+                    >
+                    {% for error in form.document_number.errors %}
+                    <p class="flex items-center gap-1 text-[11px] text-red-400 ml-1">
+                        <i class="fa-solid fa-circle-exclamation text-[10px]"></i> {{ error }}
+                    </p>
+                    {% endfor %}
+                </div>
+
+                <!-- Issued District -->
+                <div class="space-y-1">
+                    <label class="text-[9px] font-800 text-gray-500 uppercase tracking-widest ml-1">Issued District</label>
+                    <input
+                        name="issued_district"
+                        type="text"
+                        placeholder="e.g. Kathmandu"
+                        value="{{ user.profile.issued_district|default:'' }}"
+                        class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white
+                            {% if form.issued_district.errors %}border !border-red-500 shadow shadow-red-500/20{% endif %}
+                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}input-locked{% endif %}"
+                        {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                        required
+                    >
+                    {% for error in form.issued_district.errors %}
+                    <p class="flex items-center gap-1 text-[11px] text-red-400 ml-1">
+                        <i class="fa-solid fa-circle-exclamation text-[10px]"></i> {{ error }}
+                    </p>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <!-- ── FILE UPLOAD SECTION ── -->
             <div class="space-y-4">
                 <label class="text-[9px] font-800 text-gray-500 uppercase tracking-widest ml-1">Evidence Upload</label>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
                     <!-- Front Side -->
-                    <div class="upload-zone rounded-3xl p-6 text-center cursor-pointer group">
-                        <input type="file" class="hidden" id="front-id">
-                        <label for="front-id" class="cursor-pointer">
-                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-600 group-hover:text-indigo-400 mb-3 transition-colors"></i>
-                            <p class="text-[10px] font-700 uppercase tracking-widest text-gray-400 group-hover:text-white">Front View</p>
-                            <p class="text-[8px] text-gray-600 mt-1">PNG, JPG up to 5MB</p>
-                        </label>
+                    <div class="space-y-1">
+                        <div
+                            id="front-zone"
+                            class="upload-zone rounded-3xl p-6 text-center cursor-pointer group
+                                {% if user.profile.citizenship_front %}has-file{% endif %}
+                                {% if form.citizenship_front.errors %}!border-red-500 shadow shadow-red-500/20{% endif %}
+                                {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}zone-locked{% endif %}"
+                        >
+                            <!-- Remove btn — hidden when locked via CSS -->
+                            <button type="button" class="remove-btn" onclick="removeFile('front')">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+
+                            <!-- Preview: shows existing image OR new upload preview -->
+                            <div class="preview-inner" id="front-preview">
+                                {% if user.profile.citizenship_front %}
+                                <img src="{{ user.profile.citizenship_front.url }}" alt="Front ID">
+                                {% endif %}
+                            </div>
+
+                            <!-- Default upload UI — hidden when image exists -->
+                            <div class="default-content {% if user.profile.citizenship_front %}hidden{% endif %}">
+                                <input
+                                    type="file"
+                                    class="hidden file-input"
+                                    id="front-id"
+                                    name="citizenship_front"
+                                    accept="image/*"
+                                    {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                                >
+                                <label for="front-id" class="cursor-pointer">
+                                    <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-600 group-hover:text-indigo-400 mb-3 block"></i>
+                                    <p class="text-[10px] font-700 uppercase tracking-widest text-gray-400">Front View</p>
+                                    <p class="text-[9px] text-gray-600 mt-1">Click to upload</p>
+                                </label>
+                            </div>
+                        </div>
+                        {% for error in form.citizenship_front.errors %}
+                        <p class="flex items-center gap-1 text-[11px] text-red-400 ml-1">
+                            <i class="fa-solid fa-circle-exclamation text-[10px]"></i> {{ error }}
+                        </p>
+                        {% endfor %}
                     </div>
+
                     <!-- Back Side -->
-                    <div class="upload-zone rounded-3xl p-6 text-center cursor-pointer group">
-                        <input type="file" class="hidden" id="back-id">
-                        <label for="back-id" class="cursor-pointer">
-                            <i class="fa-solid fa-address-card text-2xl text-gray-600 group-hover:text-indigo-400 mb-3 transition-colors"></i>
-                            <p class="text-[10px] font-700 uppercase tracking-widest text-gray-400 group-hover:text-white">Back View</p>
-                            <p class="text-[8px] text-gray-600 mt-1">Required for Citizenship</p>
-                        </label>
+                    <div class="space-y-1">
+                        <div
+                            id="back-zone"
+                            class="upload-zone rounded-3xl p-6 text-center cursor-pointer group
+                                {% if user.profile.citizenship_back %}has-file{% endif %}
+                                {% if form.citizenship_back.errors %}!border-red-500 shadow shadow-red-500/20{% endif %}
+                                {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}zone-locked{% endif %}"
+                        >
+                            <button type="button" class="remove-btn" onclick="removeFile('back')">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+
+                            <div class="preview-inner" id="back-preview">
+                                {% if user.profile.citizenship_back %}
+                                <img src="{{ user.profile.citizenship_back.url }}" alt="Back ID">
+                                {% endif %}
+                            </div>
+
+                            <div class="default-content {% if user.profile.citizenship_back %}hidden{% endif %}">
+                                <input
+                                    type="file"
+                                    class="hidden file-input"
+                                    id="back-id"
+                                    name="citizenship_back"
+                                    accept="image/*"
+                                    {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                                >
+                                <label for="back-id" class="cursor-pointer">
+                                    <i class="fa-solid fa-address-card text-2xl text-gray-600 group-hover:text-indigo-400 mb-3 block"></i>
+                                    <p class="text-[10px] font-700 uppercase tracking-widest text-gray-400">Back View</p>
+                                    <p class="text-[9px] text-gray-600 mt-1">Click to upload</p>
+                                </label>
+                            </div>
+                        </div>
+                        {% for error in form.citizenship_back.errors %}
+                        <p class="flex items-center gap-1 text-[11px] text-red-400 ml-1">
+                            <i class="fa-solid fa-circle-exclamation text-[10px]"></i> {{ error }}
+                        </p>
+                        {% endfor %}
                     </div>
+
                 </div>
             </div>
 
-            <!-- Security Notice -->
-            <div class="p-6 bg-indigo-500/5 rounded-2xl border border-indigo-500/10 flex items-start space-x-4">
-                <i class="fa-solid fa-lock text-indigo-500 mt-1"></i>
-                <p class="text-[10px] text-indigo-300/80 leading-relaxed font-medium">
-                    Your documents are encrypted end-to-end. We use this data strictly for legal compliance and identity verification. Once verified, these files are stored in a secure offline vault.
-                </p>
-            </div>
-
-            <!-- Action Buttons -->
-             \
-            <div class="flex flex-col md:flex-row gap-4 pt-4">
-                <button type="submit" class="flex-1 py-4 bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-900 uppercase tracking-[0.2em] rounded-2xl transition shadow-xl shadow-indigo-600/20 active:scale-[0.98]">
+            <!-- ── SUBMIT BUTTON ── -->
+            <button
+                type="submit"
+                class="w-full py-4 bg-indigo-600 text-white text-[11px] font-900 uppercase tracking-[0.2em] rounded-2xl transition shadow-xl shadow-indigo-600/20
+                    {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}opacity-50 cursor-not-allowed{% else %}hover:bg-indigo-500 active:scale-[0.98]{% endif %}"
+                {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+            >
+                {% if user.profile.kyc_verified == 'in_review' %}
+                    <i class="fa-solid fa-lock mr-2"></i> Submission Locked — Under Review
+                {% elif user.profile.kyc_verified == 'varified' %}
+                    <i class="fa-solid fa-lock mr-2"></i> Verified — No Changes Allowed
+                {% else %}
                     Submit for Review
-                </button>
-            </div>
-        </form>
+                {% endif %}
+            </button>
 
-        <!-- Footer -->
-        <div class="mt-10 pt-8 border-t border-white/5 text-center">
-            <p class="text-[9px] text-gray-600 font-medium uppercase tracking-widest">
-                Verification usually takes <span class="text-gray-400">24-48 business hours</span>
-            </p>
-        </div>
+        </form>
     </main>
 
+    <script>
+        function handleFileUpload(side) {
+            const input   = document.getElementById(side + '-id');
+            const preview = document.getElementById(side + '-preview');
+            const zone    = document.getElementById(side + '-zone');
+
+            if (!input) return; // disabled inputs are removed from DOM sometimes
+
+            input.addEventListener('change', function () {
+                const file = this.files[0];
+                if (!file) return;
+
+                preview.innerHTML = '';
+
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        preview.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+                        zone.classList.add('has-file');
+                        zone.querySelector('.default-content').classList.add('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.innerHTML = `
+                        <div style="display:flex;flex-direction:column;align-items:center;padding:12px;">
+                            <i class="fa-solid fa-file-pdf" style="font-size:36px;color:#818cf8;"></i>
+                            <span style="font-size:10px;margin-top:6px;color:#9ca3af;">${file.name}</span>
+                        </div>`;
+                    zone.classList.add('has-file');
+                    zone.querySelector('.default-content').classList.add('hidden');
+                }
+            });
+        }
+
+        function removeFile(side) {
+            const input   = document.getElementById(side + '-id');
+            const preview = document.getElementById(side + '-preview');
+            const zone    = document.getElementById(side + '-zone');
+
+            if (input) input.value = '';
+            preview.innerHTML = '';
+            zone.classList.remove('has-file');
+            zone.querySelector('.default-content').classList.remove('hidden');
+        }
+
+        handleFileUpload('front');
+        handleFileUpload('back');
+    </script>
 </body>
 </html>

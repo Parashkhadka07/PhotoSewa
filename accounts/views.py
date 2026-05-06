@@ -3,6 +3,7 @@ from .admin import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from .models import Profile
+from .forms import KycForm
 
 # Create your views here.
 
@@ -54,3 +55,29 @@ def logout_view(request):
 def profile(request):
     return render(request,"accounts/profiles/profile.html")
 
+
+def Kyc(request):
+    profile,created= Profile.objects.get_or_create(user=request.user)
+    if request.method == 'POST':
+        # 2. Feed the HTML data (POST) and Files into the ModelForm
+        if profile.kyc_verified in [Profile.KYC_STATUS.VERIFIED, Profile.KYC_STATUS.IN_review]:
+            messages.error(request, "Documents cannot be updated while under review or verified.")
+            return redirect("kyc_page")
+        form = KycForm(request.POST, request.FILES, instance=profile)
+
+        # 3. Validation Trigger
+        if form.is_valid():
+            
+            profile.kyc_verified=profile.KYC_STATUS.IN_review
+            # 4. Storage: save() writes to the DB and handles the files automatically
+            form.save() 
+           
+            messages.success(request,"kyc started sucessfully!")
+            return redirect('profile_page') 
+        else:
+           
+            print(form.errors) 
+    else:
+        form = KycForm(instance=profile)
+
+    return render(request, 'accounts/profiles/kyc.html', {'form': form})
