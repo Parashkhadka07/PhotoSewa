@@ -55,6 +55,19 @@ def logout_view(request):
 def profile(request):
     return render(request,"accounts/profiles/profile.html")
 
+def upload_profile_pic(request):
+    photo = request.FILES['profile_photo'] 
+    request.user.profile.profile_photo = photo  # ADD THIS
+    request.user.profile.save()  
+  
+    return redirect("profile_page")
+
+def remove_profile(request):
+    request.user.profile.profile_photo = None
+    request.user.profile.save() 
+    messages.success(request,"profile picture deleted sucessfully!")
+    return redirect("profile_page")
+
 
 def Kyc(request):
     profile,created= Profile.objects.get_or_create(user=request.user)

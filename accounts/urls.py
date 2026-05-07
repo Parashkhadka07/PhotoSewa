@@ -7,6 +7,8 @@ urlpatterns=[
     path("logout/",views.logout_view,name="logout_page"),
     path("profile/",views.profile,name="profile_page"),
     path("kyc/",views.Kyc,name="kyc_page"),
+    path("uploads/",views.upload_profile_pic,name="profile_upload"),
+    path("delete_profilr",views.remove_profile,name="remove_profile"),
 
     
 
