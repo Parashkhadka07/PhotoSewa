@@ -38,9 +38,9 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
 class Profile(models.Model):
     class KYC_STATUS(models.TextChoices):
-        NOT_VERIFIED=("not_varified","Not varified")
+        NOT_VERIFIED=("not_verified","Not verified")
         IN_review=("in_review","In review")
-        VERIFIED=("varified","Varified")
+        VERIFIED=("verified","Verified")
         REJECTED=("rejected","Rejected")
     
     DOCUMENT_CHOICES = [

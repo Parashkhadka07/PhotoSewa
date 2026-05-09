@@ -232,7 +232,7 @@
           </button>
 
           <!-- Confirm Delete Panel -->
-          <!-- Confirm Delete Modal -->
+
           <div
             id="delete-panel"
             class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm"
@@ -285,12 +285,16 @@
           </div>
           <h1 class="text-3xl md:text-4xl font-800 tracking-tight text-white">
             {{ request.user.full_name | default:"User"}}
-            <!--this is for the icon of the verification-->
-            {% if user.profile.kyc_verified == 'varified' %}
+            <!--this is for checking the user _role-->
+            {% if user.user_role == 'photographer'%} 
+            <!--this is for checking kyc verification-->
+            {% if user.profile.kyc_verified == 'verified' %}
+
             <i class="fa fa-shield text-indigo-500 text-4xl"></i>
             {% else %}
             <i class="fa fa-hourglass-half text-amber-500 text-4xl"></i>
-            {% endif %}
+            {% endif %} 
+            {%endif%}
           </h1>
           <p class="text-sm text-gray-500 mt-2 font-medium italic">
             Member since {{ user.profile.created_at }}
@@ -334,6 +338,7 @@
           </div>
         </div>
 
+        {% if user.user_role == 'photographer'%}
         <div
           class="glass-panel p-8 rounded-[2.5rem] bg-white/5 border border-white/5"
         >
@@ -344,13 +349,13 @@
           </p>
           <div class="flex items-center justify-between">
             <h3
-              class="text-2xl font-800 uppercase italic {% if user.profile.kyc_verified == 'in_review' %} text-yellow-500 {% elif user.profile.kyc_verified == 'varified' %} text-green-500 {% elif user.profile.kyc_verified == 'rejected' %} text-red-500 {% elif user.profile.kyc_verified == 'not_varified' %} text-gray-500 {% else %} text-white {% endif %}"
+              class="text-2xl font-800 uppercase italic {% if user.profile.kyc_verified == 'in_review' %} text-yellow-500 {% elif user.profile.kyc_verified == 'verified' %} text-green-500 {% elif user.profile.kyc_verified == 'rejected' %} text-red-500 {% elif user.profile.kyc_verified == 'not_varified' %} text-gray-500 {% else %} text-white {% endif %}"
             >
-              {{ user.profile.get_kyc_verified_display }}
+              {{ user.profile.kyc_verified }}
             </h3>
           </div>
         </div>
-
+        {%endif%}
         <div
           class="glass-panel p-8 rounded-[2.5rem] bg-indigo-600/10 border border-indigo-500/20"
         >
@@ -417,7 +422,7 @@
             </div>
           </div>
         </div>
-
+        {%if user.user_role == 'photographer' %}
         <div
           class="lg:col-span-4 bg-white/5 border border-indigo-500/30 p-10 rounded-[3rem] flex flex-col justify-between"
         >
@@ -444,6 +449,7 @@
             Start Audit
           </a>
         </div>
+        {%endif%}
       </section>
     </div>
   </main>

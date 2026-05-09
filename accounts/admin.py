@@ -97,7 +97,7 @@ class ProfileAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         if "kyc_verified" in form.base_fields:
             form.base_fields["kyc_verified"].choices = [
-                ("varified", "Verified"),
+                ("verified", "Verified"),
                 ("rejected", "Rejected"),
             ]
         return form
