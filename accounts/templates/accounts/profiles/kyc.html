@@ -180,7 +180,7 @@
                 </div>
             </div>
 
-            {% elif user.profile.kyc_verified == 'varified' %}
+            {% elif user.profile.kyc_verified == 'verified' %}
             <div class="flex items-start gap-3 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300" role="alert">
                 <i class="fa-solid fa-circle-check mt-0.5"></i>
                 <div>
@@ -225,8 +225,8 @@
                         value="{{ user.profile.full_name|default:'' }}"
                         class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white focus:border-indigo-500
                             {% if form.full_name.errors %}border !border-red-500 shadow shadow-red-500/20{% endif %}
-                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}input-locked{% endif %}"
-                        {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}input-locked{% endif %}"
+                        {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}disabled{% endif %}
                         required
                     >
                     {% for error in form.full_name.errors %}
@@ -245,8 +245,8 @@
                         value="{{ user.profile.date_of_birth|date:'Y-m-d'|default:''}}"
                         class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white appearance-none
                             {% if form.date_of_birth.errors %}border !border-red-500 shadow shadow-red-500/20{% endif %}
-                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}input-locked{% endif %}"
-                        {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}input-locked{% endif %}"
+                        {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}disabled{% endif %}
                         required
                     >
                     {% for error in form.date_of_birth.errors %}
@@ -269,8 +269,8 @@
                             name="document_type"
                             class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white appearance-none cursor-pointer
                                 {% if form.document_type.errors %}border !border-red-500 shadow shadow-red-500/20{% endif %}
-                                {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}input-locked{% endif %}"
-                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                                {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}input-locked{% endif %}"
+                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}disabled{% endif %}
                             required
                         >
                             <option value="" disabled {% if not user.profile.document_type %}selected{% endif %}>Select Type</option>
@@ -300,8 +300,8 @@
                         value="{{ user.profile.document_number|default:'' }}"
                         class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white font-mono
                             {% if form.document_number.errors %}border !border-red-500 shadow shadow-red-500/20{% endif %}
-                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}input-locked{% endif %}"
-                        {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}input-locked{% endif %}"
+                        {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}disabled{% endif %}
                         required
                     >
                     {% for error in form.document_number.errors %}
@@ -321,8 +321,8 @@
                         value="{{ user.profile.issued_district|default:'' }}"
                         class="w-full input-dark rounded-xl px-4 py-3 text-sm text-white
                             {% if form.issued_district.errors %}border !border-red-500 shadow shadow-red-500/20{% endif %}
-                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}input-locked{% endif %}"
-                        {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                            {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}input-locked{% endif %}"
+                        {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}disabled{% endif %}
                         required
                     >
                     {% for error in form.issued_district.errors %}
@@ -346,7 +346,7 @@
                             class="upload-zone rounded-3xl p-6 text-center cursor-pointer group
                                 {% if user.profile.citizenship_front %}has-file{% endif %}
                                 {% if form.citizenship_front.errors %}!border-red-500 shadow shadow-red-500/20{% endif %}
-                                {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}zone-locked{% endif %}"
+                                {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}zone-locked{% endif %}"
                         >
                             <!-- Remove btn — hidden when locked via CSS -->
                             <button type="button" class="remove-btn" onclick="removeFile('front')">
@@ -368,7 +368,7 @@
                                     id="front-id"
                                     name="citizenship_front"
                                     accept="image/*"
-                                    {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                                    {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}disabled{% endif %}
                                 >
                                 <label for="front-id" class="cursor-pointer">
                                     <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-600 group-hover:text-indigo-400 mb-3 block"></i>
@@ -391,7 +391,7 @@
                             class="upload-zone rounded-3xl p-6 text-center cursor-pointer group
                                 {% if user.profile.citizenship_back %}has-file{% endif %}
                                 {% if form.citizenship_back.errors %}!border-red-500 shadow shadow-red-500/20{% endif %}
-                                {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}zone-locked{% endif %}"
+                                {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}zone-locked{% endif %}"
                         >
                             <button type="button" class="remove-btn" onclick="removeFile('back')">
                                 <i class="fa-solid fa-xmark"></i>
@@ -410,7 +410,7 @@
                                     id="back-id"
                                     name="citizenship_back"
                                     accept="image/*"
-                                    {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                                    {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}disabled{% endif %}
                                 >
                                 <label for="back-id" class="cursor-pointer">
                                     <i class="fa-solid fa-address-card text-2xl text-gray-600 group-hover:text-indigo-400 mb-3 block"></i>
@@ -433,12 +433,12 @@
             <button
                 type="submit"
                 class="w-full py-4 bg-indigo-600 text-white text-[11px] font-900 uppercase tracking-[0.2em] rounded-2xl transition shadow-xl shadow-indigo-600/20
-                    {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}opacity-50 cursor-not-allowed{% else %}hover:bg-indigo-500 active:scale-[0.98]{% endif %}"
-                {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'varified' %}disabled{% endif %}
+                    {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}opacity-50 cursor-not-allowed{% else %}hover:bg-indigo-500 active:scale-[0.98]{% endif %}"
+                {% if user.profile.kyc_verified == 'in_review' or user.profile.kyc_verified == 'verified' %}disabled{% endif %}
             >
                 {% if user.profile.kyc_verified == 'in_review' %}
                     <i class="fa-solid fa-lock mr-2"></i> Submission Locked — Under Review
-                {% elif user.profile.kyc_verified == 'varified' %}
+                {% elif user.profile.kyc_verified == 'verified' %}
                     <i class="fa-solid fa-lock mr-2"></i> Verified — No Changes Allowed
                 {% else %}
                     Submit for Review

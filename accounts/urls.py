@@ -9,6 +9,8 @@ urlpatterns=[
     path("kyc/",views.Kyc,name="kyc_page"),
     path("uploads/",views.upload_profile_pic,name="profile_upload"),
     path("delete_profilr",views.remove_profile,name="remove_profile"),
+    path("update_profile/",views.edit_profile_photo,name="edit_profile_photo"),
+    path("updateprofile_client/",views.profile_client,name="profile_client"),
 
     
 

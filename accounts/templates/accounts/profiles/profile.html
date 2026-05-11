@@ -14,6 +14,23 @@
     overflow: hidden;
   }
 
+  /* ADDED: Background animation for more "premium" feel */
+  .bg-glow {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: -1;
+    animation: pulse-glow 8s infinite alternate;
+  }
+
+  @keyframes pulse-glow {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(20px, 40px) scale(1.1); }
+  }
+
   .glass-panel {
     background: var(--panel);
     backdrop-filter: blur(16px);
@@ -24,6 +41,7 @@
   .glass-panel:hover {
     border-color: rgba(99, 102, 241, 0.3);
     background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px); /* ADDED: Slight lift on hover */
   }
 
   .nav-active {
@@ -117,6 +135,16 @@
           >Overview</span
         >
       </a>
+      <!-- ADDED: Messaging icon for interaction -->
+      <a
+        href="#"
+        class="flex items-center space-x-4 p-4 rounded-xl text-gray-400 hover:text-white transition-all hover:bg-white/5"
+      >
+        <i class="fa-solid fa-message text-sm"></i>
+        <span class="text-[10px] font-700 uppercase tracking-widest"
+          >Messages</span
+        >
+      </a>
       <a
         href="#"
         class="flex items-center space-x-4 p-4 rounded-xl text-gray-400 hover:text-white transition-all hover:bg-white/5"
@@ -151,6 +179,10 @@
 
   <!-- Main Content -->
   <main class="flex-1 flex flex-col relative custom-scroll overflow-y-auto">
+    <!-- ADDED: Background decorative elements -->
+    <div class="bg-glow top-20 left-20"></div>
+    <div class="bg-glow bottom-20 right-20" style="animation-delay: -4s;"></div>
+
     <div
       class="md:hidden flex items-center justify-between p-6 bg-black/20 border-b border-white/5"
     >
@@ -174,7 +206,7 @@
     >
       <!-- Header with Photo Upload -->
       <header
-        class="flex flex-col md:flex-row items-center gap-8 bg-white/5 p-8 rounded-[2.5rem] md:rounded-[3rem] border border-white/5"
+        class="flex flex-col md:flex-row items-center gap-8 bg-white/5 p-8 rounded-[2.5rem] md:rounded-[3rem] border border-white/5 shadow-2xl"
       >
         <!--  CHANGED: wrapped in relative div so trash button sits outside overflow-hidden circle -->
         <div class="relative flex-shrink-0">
@@ -282,6 +314,8 @@
             >
               Official Registry
             </span>
+            <!-- ADDED: Dynamic Greeting Tag -->
+            <span id="greeting-tag" class="text-[9px] text-gray-500 font-bold uppercase tracking-widest"></span>
           </div>
           <h1 class="text-3xl md:text-4xl font-800 tracking-tight text-white">
             {{ request.user.full_name | default:"User"}}
@@ -302,11 +336,11 @@
         </div>
 
         <div class="flex gap-4">
-          <button
+          <a href="{%url 'edit_profile_photo'%}"
             class="px-6 py-3 bg-white/5 hover:bg-white/10 rounded-2xl text-[10px] font-800 uppercase tracking-widest transition-all border border-white/10"
           >
             Edit Profile
-          </button>
+          </a>
           <button
             id="profile_change_button"
             class="px-6 py-2.5 bg-indigo-600 text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-indigo-700 transition active:scale-95 shadow-lg shadow-indigo-600/20 hidden"
@@ -353,6 +387,16 @@
             >
               {{ user.profile.kyc_verified }}
             </h3>
+          </div>
+        </div>
+        {%else%}
+        <!-- ADDED: Client-specific card (e.g., Booking Summary) -->
+        <div class="glass-panel p-8 rounded-[2.5rem] bg-white/5 border border-white/5">
+          <p class="text-[10px] font-800 text-gray-500 uppercase tracking-[0.2em] mb-4">Activity Status</p>
+          <h3 class="text-2xl font-800 uppercase italic text-white">Active Explorer</h3>
+          <div class="mt-4 flex items-center space-x-2 text-emerald-400">
+            <i class="fa-solid fa-circle text-[6px]"></i>
+            <span class="text-[9px] font-700 uppercase tracking-widest">Ready to Hire</span>
           </div>
         </div>
         {%endif%}
@@ -449,6 +493,18 @@
             Start Audit
           </a>
         </div>
+        {%else%}
+        <!-- ADDED: Client-specific action card -->
+        <div class="lg:col-span-4 bg-white/5 border border-emerald-500/30 p-10 rounded-[3rem] flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-6">
+              <i class="fa-solid fa-magnifying-glass text-emerald-500 text-xl"></i>
+            </div>
+            <h4 class="text-xl font-800 tracking-tight text-white mb-4 leading-tight">Book Your <br />Session</h4>
+            <p class="text-xs text-gray-400 leading-relaxed">Discover top photographers in your area and capture your best moments with professional equipment.</p>
+          </div>
+          <a href="{%url 'home_page'%}" class="mt-8 w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-900 uppercase tracking-[0.2em] rounded-2xl text-center transition-all shadow-xl shadow-emerald-600/20">Find Photographers</a>
+        </div>
         {%endif%}
       </section>
     </div>
@@ -495,6 +551,15 @@
   </div>
 
   <script>
+    // ADDED: Simple time-based greeting logic
+    window.addEventListener('DOMContentLoaded', () => {
+      const tag = document.getElementById('greeting-tag');
+      const hour = new Date().getHours();
+      if (hour < 12) tag.innerText = "• Good Morning";
+      else if (hour < 18) tag.innerText = "• Good Afternoon";
+      else tag.innerText = "• Good Evening";
+    });
+
     function toggleSidebar() {
       const sidebar = document.getElementById("sidebar");
       sidebar.classList.toggle("-translate-x-full");

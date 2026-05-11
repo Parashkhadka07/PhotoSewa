@@ -3,7 +3,7 @@ from .admin import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from .models import Profile
-from .forms import KycForm
+from .forms import KycForm,UpdateForm,UpdateFormClient
 
 # Create your views here.
 
@@ -55,6 +55,8 @@ def logout_view(request):
 def profile(request):
     return render(request,"accounts/profiles/profile.html")
 
+
+
 def upload_profile_pic(request):
     photo = request.FILES['profile_photo'] 
     request.user.profile.profile_photo = photo  # ADD THIS
@@ -62,15 +64,55 @@ def upload_profile_pic(request):
   
     return redirect("profile_page")
 
+
+
 def remove_profile(request):
     request.user.profile.profile_photo = None
     request.user.profile.save() 
     messages.success(request,"profile picture deleted sucessfully!")
     return redirect("profile_page")
 
+#this is for the updating data
+def edit_profile_photo(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+
+    if request.method == "POST":
+        form = UpdateForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect('home_page')
+        else:
+            # This allows the user to see exactly what went wrong
+            messages.error(request, "Please fix the errors below.")
+    else:
+        form = UpdateForm(instance=profile)
+
+    return render(request, "accounts/profiles/edit_profile.html", {"form": form, "profile": profile})
+
+
+def profile_client(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    if request.method == "POST":
+        form = UpdateFormClient(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect('home_page')
+        else:
+            # This allows the user to see exactly what went wrong
+            messages.error(request, "Please fix the errors below.")
+    else:
+        form = UpdateFormClient(instance=profile)
+
+    return render(request, "accounts/profiles/edit_profile.html", {"form": form, "profile": profile})
+
+   
+
 
 def Kyc(request):
     profile,created= Profile.objects.get_or_create(user=request.user)
+    print("*********",request.POST,"**********")
     if request.method == 'POST':
         # 2. Feed the HTML data (POST) and Files into the ModelForm
         if profile.kyc_verified in [Profile.KYC_STATUS.VERIFIED, Profile.KYC_STATUS.IN_review]:

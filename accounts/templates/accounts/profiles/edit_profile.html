@@ -1,0 +1,133 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-[#030303] py-12 px-6 font-sans">
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- Header -->
+        <div class="mb-10 flex justify-between items-end px-4">
+            <div>
+                <h1 class="text-3xl font-900 text-white tracking-tighter italic uppercase">
+                    Edit <span class="text-indigo-500">Registry</span>
+                </h1>
+                <p class="text-[10px] text-gray-500 font-800 uppercase tracking-[0.3em] mt-2">
+                    Role: <span class="text-indigo-400">{{ user.user_role }}</span>
+                </p>
+            </div>
+            <a href="{% url 'profile_page' %}" class="text-[10px] font-900 text-gray-500 hover:text-white uppercase tracking-widest transition-all">
+                Cancel
+            </a>
+        </div>
+
+        <!-- Global Error Messages -->
+        {% if form.errors %}
+        <div class="mb-8 p-4 bg-red-500/10 border border-red-500/50 rounded-2xl">
+            <h3 class="text-red-500 text-xs font-900 uppercase tracking-widest mb-2">Validation Errors</h3>
+            <ul class="text-gray-400 text-xs space-y-1">
+                {% for field, errors in form.errors.items %}
+                    <li><span class="text-red-400">{{ field|title }}:</span> {{ errors|striptags }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form action="{% if user.user_role == 'photographer' %}{% url 'edit_profile_photo' %}{% else %}{% url 'profile_client' %}{% endif %}" method="POST" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="bg-white/[0.02] border border-white/10 p-8 md:p-12 rounded-[3rem] backdrop-blur-2xl">
+                
+                <!-- Contact Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-900 text-indigo-500 uppercase tracking-widest ml-2">Full Name</label>
+                        <input type="text" value="{{ user.full_name }}" readonly 
+                               class="w-full bg-white/[0.05] border border-white/5 rounded-2xl p-4 text-gray-500 outline-none cursor-not-allowed">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-900 text-indigo-500 uppercase tracking-widest ml-2">Phone Number</label>
+                        <input type="text" name="Phone" value="{{ form.Phone.value|default:'' }}" 
+                               class="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-4 text-white focus:border-indigo-500 outline-none transition-all">
+                    </div>
+                </div>
+
+                <!-- Photographer Specific Fields -->
+                {% if user.user_role == 'photographer' %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-900 text-indigo-500 uppercase tracking-widest ml-2">Pricing</label>
+                        <div class="flex gap-3">
+                            <select name="currency" class="bg-[#0a0a0a] border border-white/10 rounded-2xl px-4 text-white focus:border-indigo-500 outline-none">
+                                <option value="rs" {% if form.currency.value == "rs" %}selected{% endif %}>RS</option>
+                                <option value="Dollor" {% if form.currency.value == "Dollor" %}selected{% endif %}>$ (USD)</option>
+                            </select>
+                            <input type="number" step="0.01" name="price_charge" value="{{ form.price_charge.value|default:0 }}" 
+                                   class="flex-1 bg-white/[0.03] border border-white/10 rounded-2xl p-4 text-white focus:border-indigo-500 outline-none">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-900 text-indigo-500 uppercase tracking-widest ml-2">Number of Cameras</label>
+                        <input type="number" name="no_of_cameras" value="{{ form.no_of_cameras.value|default:0 }}" 
+                               class="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-4 text-white focus:border-indigo-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="space-y-2 mb-12">
+    <label class="block text-[10px] font-900 text-indigo-500 uppercase tracking-widest ml-2">Specialization</label>
+    
+    <div class="relative">
+        <select name="specialization" 
+                class="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-4 text-white focus:border-indigo-500 outline-none appearance-none cursor-pointer transition-all"
+                style="background-color: #0f0f1a;">
+            
+            <option value="" disabled {% if not form.specialization.value %}selected{% endif %} style="background-color: #0f0f1a; color: #6b7280;">
+                Select an option...
+            </option>
+            
+            <option value="Wedding" {% if form.specialization.value == "Wedding" %}selected{% endif %} style="background-color: #0f0f1a; color: white;">
+                Wedding
+            </option>
+            
+            <option value="Picnic" {% if form.specialization.value == "Picnic" %}selected{% endif %} style="background-color: #0f0f1a; color: white;">
+                Picnic
+            </option>
+            
+            <option value="School Functions" {% if form.specialization.value == "School Functions" %}selected{% endif %} style="background-color: #0f0f1a; color: white;">
+                School Functions
+            </option>
+            
+            <option value="Baby Shower" {% if form.specialization.value == "Baby Shower" %}selected{% endif %} style="background-color: #0f0f1a; color: white;">
+                Baby Shower
+            </option>
+            
+            <option value="Party" {% if form.specialization.value == "Party" %}selected{% endif %} style="background-color: #0f0f1a; color: white;">
+                Party
+            </option>
+        </select>
+
+        <!-- Custom Arrow Icon (Since appearance-none hides the default one) -->
+        <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
+            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </div>
+    </div>
+</div>
+                {% endif %}
+
+                <!-- General Location (For both roles) -->
+                <div class="space-y-2">
+                    <label class="block text-[10px] font-900 text-indigo-500 uppercase tracking-widest ml-2">Location / District</label>
+                    <input type="text" name="location" value="{{ form.location.value|default:'' }}" 
+                           class="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-4 text-white focus:border-indigo-500 outline-none">
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="w-full mt-12 py-5 bg-indigo-600 hover:bg-indigo-700 text-white font-900 uppercase tracking-[0.3em] rounded-2xl transition-all shadow-xl shadow-indigo-600/20 active:scale-[0.99]">
+                    Update Profile
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

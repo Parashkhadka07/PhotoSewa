@@ -37,6 +37,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 class Profile(models.Model):
+
     class KYC_STATUS(models.TextChoices):
         NOT_VERIFIED=("not_verified","Not verified")
         IN_review=("in_review","In review")
@@ -58,7 +59,6 @@ class Profile(models.Model):
     issued_district=models.CharField(max_length=30, null=True)
     permanent_address=models.CharField(max_length=100, null=True)
     created_at=models.DateField(auto_now_add=True, null=True)
-    specialization = models.CharField(max_length=100, null=True, blank=True)
 # citizen data
     profile_photo=models.ImageField(upload_to="profile_pictures", null=True, blank=True)
     citizenship_front=models.ImageField(upload_to="citizenship", null=True, blank=True)
@@ -67,5 +67,21 @@ class Profile(models.Model):
     kyc_verified=models.CharField(choices=KYC_STATUS, default=KYC_STATUS.NOT_VERIFIED)
     rejection_reason=models.TextField(null=True, blank=True)
 
+ #for the updating the profile to have more information
+    class Currency(models.TextChoices):
+        RS=("rs","RS")
+        USD=("Dollor","$")
+       
+    specialization = models.CharField(max_length=100, null=True, blank=True)
+    Phone=models.CharField(max_length=10,null=True)
+    price_charge=models.DecimalField(max_digits=10,decimal_places=2,null=True)
+    currency=models.CharField(max_length=10,choices=Currency,null=True)
+    no_of_cameras=models.IntegerField(null=True)
+    location=models.CharField(max_length=150,null=True)
+    intrest=models.CharField(max_length=100,null=True)
+
+
     def __str__(self):
         return f"{self.user.email}'s profile"
+    
+

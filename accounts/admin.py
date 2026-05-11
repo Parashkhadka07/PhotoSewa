@@ -4,7 +4,6 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
-from django.contrib import messages
 
 from accounts.models import MyUser, Profile
 
@@ -88,10 +87,13 @@ class ProfileAdminForm(forms.ModelForm):
 class ProfileAdmin(admin.ModelAdmin):
     form = ProfileAdminForm#this is where upper class is used to validate it
     list_display = ["full_name", "user", "kyc_verified"]
-    readonly_fields=("full_name", "user","date_of_birth","document_type","document_number","issued_district","permanent_address","created_at","specialization","profile_photo","citizenship_front","citizenship_back")
+    list_filter = [ "kyc_verified"]
+    
     fieldsets=[("Basic informations",{"fields":["profile_photo","full_name", "user","date_of_birth","permanent_address",]}),
                ("KYC informations",{"fields":["document_type","document_number","issued_district","citizenship_front","citizenship_back"]}),
-               ("KYC Decision",{"fields":["kyc_verified","rejection_reason"]})]
+                ("Details",{"fields":["specialization","Phone","price_charge","currency","no_of_cameras","location","intrest"]}),
+               ("KYC Decision",{"fields":["kyc_verified","rejection_reason"]}),
+              ]
     
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -100,9 +102,39 @@ class ProfileAdmin(admin.ModelAdmin):
                 ("verified", "Verified"),
                 ("rejected", "Rejected"),
             ]
+            
         return form
 
+    def get_readonly_fields(self ,request,obj=None):
+        readonly_fields=("full_name", "user","date_of_birth","document_type","document_number","issued_district","permanent_address","created_at","specialization","profile_photo","citizenship_front","citizenship_back","Phone","price_charge","currency","no_of_cameras","location","intrest")
+
+        if request.user.is_superuser:
+            return ()
+        return readonly_fields
+
+        
+
+    def get_queryset(self, request):
+    # Get the original queryset
+        qs = super().get_queryset(request)
     
-        super().save_model(request, obj, form, change)
+    # 1. Admins (Superusers) always see everything
+        if request.user.is_superuser:
+            return qs
+
+    # 2. Check if the user is currently looking at the "List" of profiles
+    # We use 'resolver_match' to see if the current URL is the 'changelist'
+        is_list_view = request.resolver_match and request.resolver_match.url_name.endswith('_changelist')
+
+        if is_list_view:
+        # Only filter the list if they haven't clicked a specific filter in the sidebar
+            if "kyc_verified__exact" not in request.GET:
+                return qs.filter(kyc_verified="in_review")
+
+    # 3. If we are NOT in the list view (meaning we are inside a profile), 
+    # return the full queryset so the page doesn't crash with a "Deleted" error.
+        return qs
+
+
     
 admin.site.register(Profile, ProfileAdmin)
