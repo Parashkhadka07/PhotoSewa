@@ -136,15 +136,17 @@
         >
       </a>
       <!-- ADDED: Messaging icon for interaction -->
+       {%if request.user.user_role == 'photographer'%}
       <a
-        href="#"
+        href="{%url 'package_list'%}"
         class="flex items-center space-x-4 p-4 rounded-xl text-gray-400 hover:text-white transition-all hover:bg-white/5"
       >
         <i class="fa-solid fa-message text-sm"></i>
         <span class="text-[10px] font-700 uppercase tracking-widest"
-          >Messages</span
+          >MY PACKAGES</span
         >
       </a>
+      {%endif%}
       <a
         href="#"
         class="flex items-center space-x-4 p-4 rounded-xl text-gray-400 hover:text-white transition-all hover:bg-white/5"

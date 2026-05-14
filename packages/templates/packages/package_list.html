@@ -1,0 +1,53 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-6 py-12">
+    <div class="flex justify-between items-center mb-12">
+        <div>
+            <h1 class="text-4xl font-800 brand-font">Your <span class="text-indigo-500">Packages</span></h1>
+            <p class="text-gray-500 mt-2">Manage your photography service offerings.</p>
+        </div>
+        <a href="{% url 'create_package' %}" class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-black uppercase tracking-widest rounded-2xl transition shadow-lg shadow-indigo-600/20">
+            + Create New Package
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {% for pkg in packages %}
+        <div class="glass-card p-8 rounded-3xl border border-white/5 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 p-4">
+                <span class="text-[10px] font-black uppercase tracking-tighter {% if pkg.active %}text-green-500{% else %}text-red-500{% endif %}">
+                    ● {{ pkg.active|yesno:"Active,Inactive" }}
+                </span>
+            </div>
+            
+            <h3 class="text-2xl font-bold mb-4">{{ pkg.name }}</h3>
+            <div class="flex items-baseline gap-2 mb-6">
+                <span class="text-3xl font-black text-indigo-400">Rs. {{ pkg.price }}</span>
+                <span class="text-xs text-gray-500 font-bold uppercase tracking-widest">/ {{ pkg.duration }} Days</span>
+            </div>
+
+            <ul class="space-y-3 text-sm text-gray-400 mb-8">
+                <li><i class="fa fa-camera mr-2 text-indigo-500"></i> {{ pkg.no_of_cameras }} Cameras</li>
+                <li><i class="fa fa-users mr-2 text-indigo-500"></i> {{ pkg.no_of_staffs }} Staff Members</li>
+                {% if pkg.drone_included %}
+                <li><i class="fa fa-paper-plane mr-2 text-indigo-500"></i> Drone Included</li>
+                {% endif %}
+            </ul>
+
+            <div class="pt-6 border-t border-white/5 flex gap-4">
+                
+<a href="{% url 'delete_package' %}?name={{ pkg.name}}&photographer={{ pkg.photographer.id }}"
+   
+   class="text-[10px] font-bold uppercase tracking-widest text-red-500/60 hover:text-red-500 transition">
+   Delete
+</a>            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full py-20 text-center glass-card rounded-3xl border-dashed border-2 border-white/10">
+            <i class="fa fa-archive text-5xl text-white/10 mb-4"></i>
+            <p class="text-gray-500">No packages created yet. Start by adding your first service.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

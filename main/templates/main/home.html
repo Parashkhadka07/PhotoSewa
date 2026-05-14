@@ -64,6 +64,7 @@
 </header>
 
 <!-- Flash Deals Section: Dark Aesthetics -->
+ {%if packages%}
 <section class="py-32 bg-[#050505]">
   <div class="max-w-7xl mx-auto px-6">
     <div class="flex justify-between items-end mb-16">
@@ -84,85 +85,95 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <!-- Deal Card 1 -->
-      <div
-        class="group relative overflow-hidden bg-white/5 aspect-[4/5] rounded-[2.5rem] border border-white/10"
-      >
-        <img
-          src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800"
-          class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 grayscale group-hover:grayscale-0 transition duration-700 opacity-60"
-        />
-        <div
-          class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent p-10 flex flex-col justify-end"
-        >
-          <span
-            class="bg-[#4F46E5] text-white text-[10px] font-[800] px-4 py-1.5 rounded-full w-max mb-4 uppercase tracking-[0.2em]"
-            >20% Off</span
-          >
-          <h3
-            class="text-3xl text-white font-[800] uppercase tracking-tight mb-2"
-          >
-            Wedding Season
-          </h3>
-          <p class="text-gray-400 text-sm font-medium">
-            Valid for bookings in May & June.
-          </p>
-        </div>
-      </div>
+      
+{% for pkg in packages %}
+<div class="group relative overflow-hidden bg-white/5 aspect-[4/5] rounded-[2.5rem] border border-white/10">
 
-      <!-- Deal Card 2 -->
-      <div
-        class="group relative overflow-hidden bg-white/5 aspect-[4/5] rounded-[2.5rem] border border-white/10"
-      >
-        <img
-          src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=800"
-          class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 grayscale group-hover:grayscale-0 transition duration-700 opacity-60"
-        />
-        <div
-          class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent p-10 flex flex-col justify-end"
-        >
-          <span
-            class="bg-white/10 backdrop-blur-md text-white text-[10px] font-[800] px-4 py-1.5 border border-white/20 rounded-full w-max mb-4 uppercase tracking-[0.2em]"
-            >New Pro</span
-          >
-          <h3
-            class="text-3xl text-white font-[800] uppercase tracking-tight mb-2"
-          >
-            Portrait Pro
-          </h3>
-          <p class="text-gray-400 text-sm font-medium">
-            60-min shoot + 10 edits.
-          </p>
-        </div>
-      </div>
+    <!-- Photographer Profile Photo -->
+    {% if pkg.photographer.profile_photo %}
+    <img
+        src="{{ pkg.photographer.profile_photo.url }}"
+        class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 grayscale group-hover:grayscale-0 transition duration-700 opacity-60"
+    />
+    {% endif %}
 
-      <!-- Deal Card 3 -->
-      <div
-        class="group relative overflow-hidden bg-white/5 aspect-[4/5] rounded-[2.5rem] border border-white/10"
-      >
-        <img
-          src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800"
-          class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 grayscale group-hover:grayscale-0 transition duration-700 opacity-60"
-        />
-        <div
-          class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent p-10 flex flex-col justify-end"
-        >
-          <span
-            class="bg-[#4F46E5] text-white text-[10px] font-[800] px-4 py-1.5 rounded-full w-max mb-4 uppercase tracking-[0.2em]"
-            >Commercial</span
-          >
-          <h3
-            class="text-3xl text-white font-[800] uppercase tracking-tight mb-2"
-          >
-            E-Com Bulk
-          </h3>
-          <p class="text-gray-400 text-sm font-medium">
-            Bulk discounts for brands.
-          </p>
+    <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#05050580] to-transparent p-8 flex flex-col justify-end gap-2">
+
+        <!-- Discount Badge -->
+        {% if pkg.discount %}
+        <span class="bg-[#4F46E5] text-white text-[10px] font-[800] px-4 py-1.5 rounded-full w-max uppercase tracking-[0.2em]">
+            {{ pkg.discount_text|default:"Special Offer" }}
+        </span>
+        {% endif %}
+
+        <!-- Package Name -->
+        <h3 class="text-2xl text-white font-[800] uppercase tracking-tight">
+            {{ pkg.name }}
+        </h3>
+
+        <!-- Photographer -->
+        <p class="text-indigo-300 text-xs font-semibold uppercase tracking-widest">
+            By {{ pkg.photographer.full_name }}
+        </p>
+
+        <!-- Price & Discount -->
+        <div class="flex items-center gap-3 flex-wrap">
+            <span class="text-white font-bold text-xl line-through">Rs. {{ pkg.price  }}</span>
+            {% if pkg.discount %}
+            
+            <span class="text-green-400 text-sm font-bold">- Rs. {{ pkg.discount }} off</span>
+            {% endif %}
         </div>
-      </div>
+
+        <!-- Duration & Delivery -->
+        <div class="flex flex-wrap gap-2 text-gray-300 text-xs font-medium">
+            <span class="bg-white/10 px-2 py-1 rounded-full">📅 {{ pkg.duration }} day(s)</span>
+            <span class="bg-white/10 px-2 py-1 rounded-full">🚚 Delivery: {{ pkg.delivery_time }} days</span>
+        </div>
+
+        <!-- Cameras & Staffs -->
+        <div class="flex flex-wrap gap-2 text-gray-300 text-xs font-medium">
+            {% if pkg.no_of_cameras %}
+            <span class="bg-white/10 px-2 py-1 rounded-full">📷 {{ pkg.no_of_cameras }} camera(s)</span>
+            {% endif %}
+            {% if pkg.no_of_staffs %}
+            <span class="bg-white/10 px-2 py-1 rounded-full">👥 {{ pkg.no_of_staffs }} staff(s)</span>
+            {% endif %}
+            {% if pkg.drone_included %}
+            <span class="bg-indigo-500/30 text-indigo-300 px-2 py-1 rounded-full">🚁 Drone included</span>
+            {% endif %}
+        </div>
+
+        <!-- Free Accessories -->
+        {% if pkg.free_accessories %}
+        <p class="text-gray-400 text-xs">
+            🎁 {{ pkg.free_accessories }}
+        </p>
+        {% endif %}
+
+        <!-- Offer End Date -->
+        {% if pkg.discount %}
+        <p class="text-red-400 text-xs font-semibold">
+            ⏳ Offer ends {{ pkg.discount_end_date }}
+        </p>
+        {% endif %}
+
+    </div>
+</div>
+{% empty %}
+<p class="text-gray-400 col-span-3 text-center py-20 text-lg">
+    No packages available at the moment.
+</p>
+
+{% endfor %}
+
+      
+
+     
     </div>
   </div>
 </section>
+{%endif%}
 
 <!-- Featured Talent: Glassmorphism Cards -->
 <section class="py-32 bg-[#050505] border-t border-white/5" >
