@@ -87,7 +87,7 @@
       <!-- Deal Card 1 -->
       
 {% for pkg in packages %}
-<div class="group relative overflow-hidden bg-white/5 aspect-[4/5] rounded-[2.5rem] border border-white/10">
+<a href="{% url 'book_package' pkg.id%}" class="group relative overflow-hidden bg-white/5 aspect-[4/5] rounded-[2.5rem] border border-white/10">
 
     <!-- Photographer Profile Photo -->
     {% if pkg.photographer.profile_photo %}
@@ -159,7 +159,7 @@
         {% endif %}
 
     </div>
-</div>
+</a>
 {% empty %}
 <p class="text-gray-400 col-span-3 text-center py-20 text-lg">
     No packages available at the moment.
@@ -277,11 +277,12 @@
               >{{photographer.profile.specialization}}</span
             >
           </div>
+          <a href="{% url 'photographer_profile' photographer.id %}">
           <button
             class="w-full py-4 bg-transparent border border-white/10 rounded-xl font-[800] uppercase text-[10px] tracking-[0.2em] group-hover:bg-white group-hover:text-black transition-all active:scale-95"
           >
             View Portfolio
-          </button>
+          </button></a>
         </div>
       </div>
       {%endfor%}

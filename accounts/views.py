@@ -1,9 +1,11 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from .admin import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
-from .models import Profile
+from .models import Profile,MyUser
 from .forms import KycForm,UpdateForm,UpdateFormClient
+
+from packages.models import Package
 
 # Create your views here.
 
@@ -136,3 +138,13 @@ def Kyc(request):
         form = KycForm(instance=profile)
 
     return render(request, 'accounts/profiles/kyc.html', {'form': form})
+
+def photographer_profile(request, user_id):
+    photographer = get_object_or_404(MyUser, id=user_id, user_role='photographer')
+    profile = get_object_or_404(Profile, user=photographer, kyc_verified='verified')
+    packages = Package.objects.filter(photographer=profile, active=True)
+
+    return render(request, 'accounts/photographer_profile.html', {
+        'profile': profile,
+        'packages': packages,
+    })

@@ -1,0 +1,120 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-[#050505] grid grid-cols-1 md:grid-cols-2">
+
+  <!-- LEFT: Package Details -->
+  <div class="bg-[#0a0a0a] border-r border-white/5 p-10">
+
+    {% if pkg.discount %}
+    <span class="bg-[#4F46E5] text-white text-[10px] font-[800] px-4 py-1.5 rounded-full uppercase tracking-[0.2em] mb-4 inline-block">
+      {{ pkg.discount_text|default:"Special Offer" }}
+    </span>
+    {% endif %}
+
+    <h1 class="text-3xl font-[800] uppercase tracking-tight text-white mb-1">{{ pkg.name }}</h1>
+    <p class="text-indigo-400 text-xs font-[800] uppercase tracking-widest mb-6">By {{ pkg.photographer.full_name }}</p>
+
+    <div class="flex items-center gap-4 mb-6">
+      <span class="text-white text-xl font-bold line-through opacity-50">Rs. {{ pkg.price }}</span>
+      {% if pkg.discount %}
+      <span class="text-green-400 text-sm font-bold">− Rs. {{ pkg.discount }} off</span>
+      {% endif %}
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 mb-6">
+      <div class="bg-white/5 border border-white/8 rounded-xl p-3 text-xs text-white/60 flex items-center gap-2">
+        📅 {{ pkg.duration }} day(s)
+      </div>
+      <div class="bg-white/5 border border-white/8 rounded-xl p-3 text-xs text-white/60 flex items-center gap-2">
+        🚚 {{ pkg.delivery_time }} days delivery
+      </div>
+      {% if pkg.no_of_cameras %}
+      <div class="bg-white/5 border border-white/8 rounded-xl p-3 text-xs text-white/60 flex items-center gap-2">
+        📷 {{ pkg.no_of_cameras }} camera(s)
+      </div>
+      {% endif %}
+      {% if pkg.no_of_staffs %}
+      <div class="bg-white/5 border border-white/8 rounded-xl p-3 text-xs text-white/60 flex items-center gap-2">
+        👥 {{ pkg.no_of_staffs }} staff
+      </div>
+      {% endif %}
+    </div>
+
+    {% if pkg.drone_included %}
+    <span class="bg-indigo-500/20 text-indigo-300 text-xs px-3 py-1 rounded-full font-[800] uppercase tracking-widest mb-4 inline-block">🚁 Drone included</span>
+    {% endif %}
+
+    {% if pkg.free_accessories %}
+    <div class="mt-4">
+      <p class="text-[10px] text-white/25 uppercase tracking-widest font-[800] mb-2">Free Accessories</p>
+      <p class="text-xs text-white/50 bg-white/3 border border-white/5 rounded-xl p-3 leading-relaxed">{{ pkg.free_accessories }}</p>
+    </div>
+    {% endif %}
+
+    {% if pkg.discount %}
+    <div class="mt-6 flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-red-400 text-xs font-semibold">
+      ⏳ Offer ends {{ pkg.discount_end_date }}
+    </div>
+    {% endif %}
+
+  </div>
+
+  <!-- RIGHT: Booking Form -->
+  <div class="p-10">
+    <h2 class="text-2xl font-[800] uppercase tracking-tight text-white mb-1">Confirm Booking</h2>
+    <p class="text-[10px] text-white/30 uppercase tracking-widest font-[800] mb-8">Fill in your details below</p>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-5">
+        <label class="text-[10px] text-white/40 uppercase tracking-widest font-[800] block mb-2">Phone Number</label>
+        <input type="tel" name="phone" maxlength="10" placeholder="98XXXXXXXX"
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-indigo-500 transition-all">
+        {% if form.phone.errors %}
+        <p class="text-red-400 text-xs mt-1">{{ form.phone.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <div class="mb-8">
+        <label class="text-[10px] text-white/40 uppercase tracking-widest font-[800] block mb-2">Date of Booking</label>
+        <input type="date" name="date_of_booking"
+          class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition-all">
+        {% if form.date_of_booking.errors %}
+        <p class="text-red-400 text-xs mt-1">{{ form.date_of_booking.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Auto-filled summary -->
+      <div class="border-t border-white/5 pt-6 mb-6">
+        <p class="text-[10px] text-white/25 uppercase tracking-widest font-[800] mb-3">Auto-filled from package</p>
+        <div class="space-y-2 text-xs">
+          <div class="flex justify-between text-white/40 bg-white/2 border border-white/5 rounded-lg px-3 py-2">
+            <span class="uppercase tracking-widest font-[800] text-[10px]">Price</span>
+            <span>Rs. {{ pkg.price }}</span>
+          </div>
+          <div class="flex justify-between text-white/40 bg-white/2 border border-white/5 rounded-lg px-3 py-2">
+            <span class="uppercase tracking-widest font-[800] text-[10px]">Cameras</span>
+            <span>{{ pkg.no_of_cameras|default:"—" }}</span>
+          </div>
+          <div class="flex justify-between text-white/40 bg-white/2 border border-white/5 rounded-lg px-3 py-2">
+            <span class="uppercase tracking-widest font-[800] text-[10px]">Staff</span>
+            <span>{{ pkg.no_of_staffs|default:"—" }}</span>
+          </div>
+          <div class="flex justify-between text-white/40 bg-white/2 border border-white/5 rounded-lg px-3 py-2">
+            <span class="uppercase tracking-widest font-[800] text-[10px]">Drone</span>
+            <span>{% if pkg.drone_included %}Yes{% else %}No{% endif %}</span>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit"
+        class="w-full bg-[#4F46E5] text-white py-4 rounded-[1rem] font-[800] uppercase tracking-[0.2em] text-xs hover:bg-[#4338CA] transition-all active:scale-95">
+        Confirm Booking →
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
