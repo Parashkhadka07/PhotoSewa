@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from .models import Profile,MyUser
 from .forms import KycForm,UpdateForm,UpdateFormClient
-
+from django.contrib.auth.decorators import login_required
 from packages.models import Package
 
 # Create your views here.
@@ -46,7 +46,7 @@ def register(request):
         return render(request, "accounts/registration.html")
 
         
-    
+@login_required   
 def logout_view(request):
     logout(request)
     messages.success(request,"LogOut Sucessfull !")
@@ -54,11 +54,12 @@ def logout_view(request):
     
 
 #profile
+@login_required
 def profile(request):
     return render(request,"accounts/profiles/profile.html")
 
 
-
+@login_required
 def upload_profile_pic(request):
     photo = request.FILES['profile_photo'] 
     request.user.profile.profile_photo = photo  # ADD THIS
@@ -67,7 +68,7 @@ def upload_profile_pic(request):
     return redirect("profile_page")
 
 
-
+@login_required
 def remove_profile(request):
     request.user.profile.profile_photo = None
     request.user.profile.save() 
@@ -75,6 +76,7 @@ def remove_profile(request):
     return redirect("profile_page")
 
 #this is for the updating data
+@login_required
 def edit_profile_photo(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
 
@@ -92,7 +94,7 @@ def edit_profile_photo(request):
 
     return render(request, "accounts/profiles/edit_profile.html", {"form": form, "profile": profile})
 
-
+@login_required
 def profile_client(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
     if request.method == "POST":
@@ -111,7 +113,7 @@ def profile_client(request):
 
    
 
-
+@login_required
 def Kyc(request):
     profile,created= Profile.objects.get_or_create(user=request.user)
     print("*********",request.POST,"**********")
@@ -138,7 +140,7 @@ def Kyc(request):
         form = KycForm(instance=profile)
 
     return render(request, 'accounts/profiles/kyc.html', {'form': form})
-
+@login_required
 def photographer_profile(request, user_id):
     photographer = get_object_or_404(MyUser, id=user_id, user_role='photographer')
     profile = get_object_or_404(Profile, user=photographer, kyc_verified='verified')

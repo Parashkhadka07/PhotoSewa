@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhotoSewa | Security Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #050505; color: white; overflow: hidden; }
+        h1, h2, .brand-font { font-family: 'Montserrat', sans-serif; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .otp-input {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .otp-input:focus {
+            border-color: #4F46E5;
+            outline: none;
+            background: rgba(255, 255, 255, 0.07);
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.3);
+        }
+
+        .back-nav-white {
+            transition: all 0.3s ease;
+            color: white;
+        }
+        .back-nav-white:hover {
+            opacity: 0.7;
+            transform: translateX(-4px);
+        }
+    </style>
+</head>
+<body class="h-screen flex items-center justify-center p-4">
+
+    <!-- Ambient Background Glow -->
+    <div class="fixed inset-0 z-0">
+        <div class="absolute top-[20%] left-[30%] w-[40%] h-[40%] bg-indigo-900/10 blur-[120px] rounded-full"></div>
+    </div>
+
+    <!-- WHITE BACK ICON (Fixed Top Left) -->
+    <a href="register.html" class="fixed top-8 left-8 z-50 flex items-center space-x-3 back-nav-white group">
+        <i class="fa fa-arrow-left text-xl"></i>
+        <span class="text-[10px] font-800 uppercase tracking-[0.3em]">Back</span>
+    </a>
+
+    <!-- Main Card -->
+    <main class="relative z-10 w-full max-w-4xl grid lg:grid-cols-2 gap-0 overflow-hidden rounded-[2.5rem] glass-panel shadow-2xl">
+        
+        <!-- Left: Branding Context -->
+        <div class="hidden lg:flex p-12 flex-col justify-between bg-black/40 border-r border-white/5">
+            <div>
+                <span class="text-xl font-800 tracking-tighter text-indigo-500 brand-font italic uppercase">Photo<span class="text-white">Sewa</span></span>
+                <h1 class="mt-12 text-5xl font-800 leading-none uppercase tracking-tighter">
+                    Verify <br><span class="text-indigo-500">Identity.</span>
+                </h1>
+                <p class="mt-6 text-gray-400 text-sm font-light leading-relaxed max-w-xs">
+                    We have dispatched a secure authentication key to your email address. Protect your account credentials.
+                </p>
+            </div>
+
+            <div class="text-[9px] font-800 uppercase tracking-[0.4em] text-gray-700">
+                Visual Identity v2.0
+            </div>
+        </div>
+
+        <!-- Right: Focused OTP Input -->
+        <div class="p-10 md:p-14 bg-white/5 flex items-center">
+            <div class="max-w-xs mx-auto lg:max-w-none w-full text-center lg:text-left">
+                <div class="mb-10">
+                    <h2 class="text-3xl font-800 uppercase tracking-tight">Security Check</h2>
+                    <p class="text-gray-500 text-[11px] font-medium tracking-wide mt-2">Enter the 4-digit code sent to your inbox.</p>
+                </div>
+
+                <form action="#" class="space-y-8">
+                    <!-- OTP Box Container -->
+                    <div class="flex justify-center lg:justify-start space-x-4">
+                        <input type="text" maxlength="1" class="otp-input w-16 h-20 rounded-2xl text-center text-2xl font-800 brand-font text-white" required>
+                        <input type="text" maxlength="1" class="otp-input w-16 h-20 rounded-2xl text-center text-2xl font-800 brand-font text-white" required>
+                        <input type="text" maxlength="1" class="otp-input w-16 h-20 rounded-2xl text-center text-2xl font-800 brand-font text-white" required>
+                        <input type="text" maxlength="1" class="otp-input w-16 h-20 rounded-2xl text-center text-2xl font-800 brand-font text-white" required>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="pt-2 text-center lg:text-left">
+                        <button type="submit" class="w-full py-5 bg-indigo-600 hover:bg-indigo-500 text-white font-800 uppercase tracking-widest text-[11px] rounded-2xl transition-all shadow-xl shadow-indigo-600/20 active:scale-[0.98]">
+                            Verify & Activate
+                        </button>
+                        
+                        <!-- Resend Prompt Below Button -->
+                        <div class="mt-6">
+                            <p class="text-[11px] text-gray-500 font-medium tracking-wide">
+                                Didn't receive the code? 
+                                <button type="button" class="block lg:inline mt-2 lg:mt-0 text-indigo-500 font-800 uppercase tracking-widest hover:underline ml-1">
+                                    Resend Code
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript to auto-advance focus between inputs -->
+    <script>
+        const inputs = document.querySelectorAll('.otp-input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value.length === 0 && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

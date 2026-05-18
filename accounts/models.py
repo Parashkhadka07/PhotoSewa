@@ -21,7 +21,7 @@ class MyUserManager(BaseUserManager):
 class MyUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name="email address", max_length=255, unique=True)
     full_name = models.CharField(max_length=100, default="USER") 
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     ROLE_CHOICES = [
@@ -85,3 +85,5 @@ class Profile(models.Model):
         return f"{self.user.email}'s profile"
     
 
+class otp(models.Model):
+    user=models.OneToOneField(MyUser, on_delete=models.CASCADE)
